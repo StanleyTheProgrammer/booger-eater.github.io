@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>👃 Booger Eating Simulator | Pick & Eat | Saves with Cookies</title>
+    <title>👃 BOOGER EATING SIMULATOR | EPIC EDITION 🍽️</title>
     <style>
         * {
             user-select: none;
@@ -13,7 +13,7 @@
         body {
             margin: 0;
             min-height: 100vh;
-            background: linear-gradient(145deg, #1b4a2e 0%, #0e3a22 100%);
+            background: linear-gradient(145deg, #1b4a2e 0%, #0a2a1a 100%);
             font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Comic Neue', cursive;
             display: flex;
             justify-content: center;
@@ -21,13 +21,12 @@
             padding: 20px;
         }
 
-        /* Main game panel */
         .game-container {
-            max-width: 620px;
+            max-width: 700px;
             width: 100%;
-            background: rgba(255,241,184,0.92);
+            background: rgba(255,241,184,0.94);
             border-radius: 80px 80px 60px 60px;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.4), inset 0 1px 4px rgba(255,255,200,0.8);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.5), inset 0 1px 4px rgba(255,255,200,0.9);
             backdrop-filter: blur(2px);
             padding: 20px 20px 35px;
             transition: all 0.2s;
@@ -35,33 +34,27 @@
         }
 
         h1 {
-            font-size: 2.3rem;
-            margin: 0 0 5px 0;
+            font-size: 2rem;
+            margin: 0 0 5px;
             color: #5a3e1b;
             text-shadow: 3px 3px 0 #ffd966;
-            letter-spacing: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-        }
-
-        h1 span {
-            font-size: 2.8rem;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .sub {
-            font-size: 1rem;
+            font-size: 0.85rem;
             background: #2c2b26;
             display: inline-block;
             padding: 4px 16px;
             border-radius: 50px;
             color: #f9e7b3;
-            margin-bottom: 20px;
-            font-weight: bold;
+            margin-bottom: 15px;
         }
 
-        /* stats area */
         .stats {
             background: #2d2218;
             border-radius: 60px;
@@ -69,693 +62,510 @@
             margin: 10px 0 20px;
             color: #ffefcf;
             display: flex;
-            justify-content: space-between;
             flex-wrap: wrap;
-            gap: 15px;
+            justify-content: space-between;
+            gap: 10px;
             box-shadow: inset 0 2px 5px #1f160f, 0 5px 10px rgba(0,0,0,0.3);
         }
 
         .stat-card {
             background: #4f3722;
             border-radius: 40px;
-            padding: 8px 20px;
+            padding: 6px 12px;
             flex: 1;
             text-align: center;
             font-weight: bold;
-            box-shadow: inset 0 1px 2px #7f5a3a, 0 3px 6px black;
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
             opacity: 0.9;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.7rem;
             font-weight: 800;
             line-height: 1;
-            margin-top: 4px;
             color: #ffdd99;
             text-shadow: 0 2px 0 #5a2e0e;
         }
 
-        /* BOOGER BUTTON */
         .booger-area {
-            margin: 15px 0 20px;
+            margin: 10px 0 15px;
             position: relative;
         }
 
         .booger-btn {
-            background: radial-gradient(circle at 35% 30%, #7a9f4a, #3c6b1f);
-            width: 220px;
-            height: 220px;
+            background: radial-gradient(circle at 35% 30%, #8abf4a, #2c5e12);
+            width: 210px;
+            height: 210px;
             border-radius: 50%;
             margin: 0 auto;
             cursor: pointer;
-            box-shadow: 0 20px 25px rgba(0,0,0,0.5), inset 0 -8px 0 #1c3f0a, inset 0 2px 8px #d2ffa0;
+            box-shadow: 0 20px 25px rgba(0,0,0,0.5), inset 0 -8px 0 #1c3f0a, inset 0 2px 12px #e2ffb0;
             transition: transform 0.05s linear;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
             border: none;
         }
 
-        .booger-btn:active {
-            transform: scale(0.96);
-        }
+        .booger-btn:active { transform: scale(0.96); }
+        .booger-face { font-size: 5rem; filter: drop-shadow(2px 6px 8px rgba(0,0,0,0.3)); }
 
-        .booger-face {
-            font-size: 5.5rem;
-            filter: drop-shadow(2px 6px 8px rgba(0,0,0,0.3));
-            transition: transform 0.1s;
-        }
-
-        /* floating animation (when clicked) */
         .float-particle {
             position: fixed;
             pointer-events: none;
             z-index: 1000;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: bold;
-            animation: flyEat 0.6s ease-out forwards;
-            text-shadow: 0 0 3px darkgreen;
+            animation: flyEat 0.7s ease-out forwards;
+            text-shadow: 0 0 4px darkgreen;
         }
 
         @keyframes flyEat {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(0.7);
-            }
-            40% {
-                opacity: 1;
-                transform: translate(var(--dx, 20px), var(--dy, -60px)) scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(calc(var(--dx, 20px) * 1.6), calc(var(--dy, -60px) * 1.9)) scale(0.4);
-            }
+            0% { opacity: 1; transform: translate(0,0) scale(0.7);}
+            50% { opacity: 1; transform: translate(var(--dx,20px), var(--dy,-70px)) scale(1.2);}
+            100% { opacity: 0; transform: translate(calc(var(--dx,20px)*1.5), calc(var(--dy,-70px)*2)) scale(0.4);}
         }
 
-        /* munch animation on booger */
         @keyframes munch {
-            0% { transform: scale(1); text-shadow: 0 0 0 gold; }
-            50% { transform: scale(1.25); text-shadow: 0 0 12px #ffcc44; filter: brightness(1.2);}
-            100% { transform: scale(1); text-shadow: 0 0 0; }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.25); text-shadow: 0 0 15px #ffcc44; filter: brightness(1.2);}
+            100% { transform: scale(1);}
         }
+        .munch-effect { animation: munch 0.2s ease-in-out; }
 
-        .munch-effect {
-            animation: munch 0.2s ease-in-out;
-        }
-
-        /* upgrades panel */
         .upgrades-panel {
             background: #e9d9b4;
             border-radius: 50px;
             padding: 15px;
             margin: 15px 0 10px;
             box-shadow: inset 0 0 0 2px #fff3cf, 0 8px 18px rgba(0,0,0,0.2);
+            max-height: 380px;
+            overflow-y: auto;
         }
-
         .upgrades-title {
             font-weight: bold;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             background: #b97f44;
             display: inline-block;
-            padding: 5px 25px;
+            padding: 4px 20px;
             border-radius: 40px;
             color: white;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
-
         .upgrade-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
-
         .upgrade-card {
             background: #6f4e2e;
             border-radius: 60px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 18px;
+            padding: 6px 15px;
             color: white;
             box-shadow: 0 3px 0 #3f2a18;
             transition: 0.07s linear;
             cursor: pointer;
         }
-
         .upgrade-card.disabled {
             opacity: 0.5;
             filter: grayscale(0.2);
             pointer-events: none;
         }
+        .upgrade-card:active { transform: scale(0.98); }
+        .upgrade-info { text-align: left; flex: 2; }
+        .upgrade-name { font-weight: bold; font-size: 1rem; display: flex; gap: 6px; align-items: center;}
+        .upgrade-desc { font-size: 0.65rem; opacity: 0.9; }
+        .upgrade-cost { background: #f5bc70; padding: 4px 12px; border-radius: 40px; color: #3f2a12; font-weight: bold; font-size: 0.9rem;}
 
-        .upgrade-card:active {
-            transform: scale(0.98);
-        }
-
-        .upgrade-info {
-            text-align: left;
-            flex: 2;
-        }
-
-        .upgrade-name {
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .upgrade-desc {
-            font-size: 0.7rem;
-            opacity: 0.9;
-        }
-
-        .upgrade-cost {
-            background: #f5bc70;
-            padding: 6px 14px;
+        .special-events {
+            background: #5c432a;
             border-radius: 40px;
-            color: #3f2a12;
-            font-weight: bold;
-            font-size: 1rem;
+            padding: 8px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: #ffecb3;
         }
-
+        .event-btn {
+            background: #e29c45;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.05s linear;
+            color: #2c1a0a;
+        }
+        .event-btn:active { transform: scale(0.96);}
         .reset-btn {
-            margin-top: 20px;
             background: #b34e3a;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 18px;
             border-radius: 60px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #ffefcf;
             cursor: pointer;
             box-shadow: 0 4px 0 #632818;
-            transition: 0.07s linear;
+            margin-top: 12px;
         }
+        .cookie-info { font-size: 0.6rem; margin-top: 12px; background: #3e2c1c; display: inline-block; padding: 3px 10px; border-radius: 40px; color: #ffdca8;}
+        footer { font-size: 0.65rem; margin-top: 8px; color: #4c3b27;}
 
-        .reset-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #632818;
-        }
-
-        .cookie-info {
-            font-size: 0.65rem;
-            margin-top: 15px;
-            background: #3e2c1c;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 40px;
-            color: #ffdca8;
-        }
-
-        footer {
-            font-size: 0.7rem;
-            margin-top: 10px;
-            color: #4c3b27;
-        }
-
-        @media (max-width: 500px) {
-            .booger-btn { width: 170px; height: 170px; }
-            .booger-face { font-size: 4rem; }
-            .stat-value { font-size: 1.5rem; }
-            .upgrade-name { font-size: 1rem; }
+        @media (max-width: 550px) {
+            .booger-btn { width: 150px; height: 150px; }
+            .booger-face { font-size: 3.8rem; }
+            .stat-value { font-size: 1.3rem; }
+            .upgrade-name { font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <h1>
-        <span>👃</span> BOOGER EATER <span>😋</span>
-    </h1>
-    <div class="sub">~ pick, click & eat ~ 🍪 cookies save progress</div>
+    <h1>👃 BOOGER <span>🍽️</span> EATER <span>🤤</span> <span>✨</span></h1>
+    <div class="sub">~ MEGA CLICKER ~ upgrades, shinies, combo, prestige-like perks!</div>
 
     <div class="stats">
-        <div class="stat-card">
-            <div class="stat-label">💚 BOOGERS</div>
-            <div class="stat-value" id="boogerCount">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">⚡ BOOGER POWER</div>
-            <div class="stat-value" id="clickPower">1</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">🍽️ TOTAL EATEN</div>
-            <div class="stat-value" id="totalEaten">0</div>
-        </div>
+        <div class="stat-card"><div class="stat-label">💚 BOOGERS</div><div class="stat-value" id="boogerCount">0</div></div>
+        <div class="stat-card"><div class="stat-label">⚡ POWER/CLICK</div><div class="stat-value" id="clickPower">1</div></div>
+        <div class="stat-card"><div class="stat-label">🍽️ TOTAL EATEN</div><div class="stat-value" id="totalEaten">0</div></div>
+        <div class="stat-card"><div class="stat-label">💎 CRIT CHANCE</div><div class="stat-value" id="critChance">0%</div></div>
     </div>
 
-    <!-- The BIG BOOGER (clickable) -->
     <div class="booger-area">
         <div class="booger-btn" id="boogerClicker">
             <div class="booger-face" id="boogerFace">💚👃💚</div>
         </div>
     </div>
 
-    <!-- UPGRADES SECTION -->
     <div class="upgrades-panel">
-        <div class="upgrades-title">🚀 UPGRADES 🧠</div>
-        <div class="upgrade-grid" id="upgradesList">
-            <!-- upgrades injected via js -->
-        </div>
+        <div class="upgrades-title">🚀 UPGRADES & MUTATIONS 🧬</div>
+        <div class="upgrade-grid" id="upgradesList"></div>
     </div>
 
+    <div class="special-events">
+        <span>🎲 DAILY BOOGER BONUS</span>
+        <button class="event-btn" id="dailyBonusBtn">🎁 CLAIM (24h)</button>
+        <button class="event-btn" id="luckyDipBtn">🍀 LUCKY DIP (50 cost)</button>
+    </div>
     <button class="reset-btn" id="resetGame">🧽 WIPE NOSE & RESET 🧽</button>
-    <div class="cookie-info">🍪 Auto-saves using cookies (expires in 365 days)</div>
-    <footer>⭐ Click the snot ball → gain & eat booger instantly! Upgrades make you powerful! ⭐</footer>
+    <div class="cookie-info">🍪 Auto-saves using cookies (365d) — everything persists!</div>
+    <footer>⭐ CRITICAL HITS! SHINY BOOGER! PRESTIGE SHARDS! AUTO MUNCHERS! ⭐</footer>
 </div>
 
 <script>
-    // --------------------------------------------------------------
-    //  BOOGER EATING SIMULATOR with COOKIE SAVING (no localStorage)
-    // --------------------------------------------------------------
+    // ---------- EPIC BOOGER SIMULATOR v3 ----------
+    // cookies utils
+    function setCookie(name, value, days=365) { let d=new Date(); d.setTime(d.getTime()+days*86400000); document.cookie=name+"="+encodeURIComponent(JSON.stringify(value))+"; expires="+d.toUTCString()+"; path=/; SameSite=Lax"; }
+    function getCookie(name) { let ca=document.cookie.split(';'); for(let i=0;i<ca.length;i++){ let c=ca[i].trim(); if(c.indexOf(name+"=")===0) try{ return JSON.parse(decodeURIComponent(c.substring(name.length+1))); }catch(e){ return null; } } return null; }
     
-    // ---------- GAME STATE ----------
-    let boogers = 0.0;          // current currency (float for precision)
-    let clickPower = 1;         // base boogers per click
-    let totalEaten = 0;         // lifetime boogers consumed
+    // GAME STATE
+    let boogers = 0;
+    let clickPower = 1;
+    let totalEaten = 0;
+    let extraMultiplier = 1;      // double nostril
+    let goldenActive = false;      // 5x
+    let critChance = 0;            // % extra critical hit (double reward)
+    let shinyMultiplier = 1;       // shiny booger upgrade (global multi)
+    let prestigeShards = 0;        // special currency for ultimate upgrades
+    let lastDailyClaim = 0;        // timestamp
+    let autoClickerLevel = 0;      // auto-clicker (every 2 sec)
+    let autoClickerInterval = null;
     
-    // Multiplier upgrades
-    let extraMultiplier = 1;    // from "Double Nostril" (becomes 2)
-    let goldenActive = false;    // golden booger upgrade (5x total)
-    
-    // Upgrade definitions (dynamic quantities for scaling)
+    // Upgrade definitions (EVEN MORE!)
     const upgrades = [
-        { 
-            id: "strong_finger", 
-            name: "👆 Sticky Finger", 
-            desc: "+1 booger per click", 
-            baseCost: 15, 
-            powerBonus: 1, 
-            type: "click",
-            bought: false,
-            quantity: 0,
-            multiplierCost: 1.25
-        },
-        { 
-            id: "gross_appetite", 
-            name: "🤢 Hungry Goblin", 
-            desc: "+3 booger per click", 
-            baseCost: 65, 
-            powerBonus: 3, 
-            type: "click",
-            bought: false,
-            quantity: 0,
-            multiplierCost: 1.35
-        },
-        { 
-            id: "double_dip", 
-            name: "👃 Double Nostril", 
-            desc: "Double clicking power (×2)", 
-            baseCost: 200, 
-            powerBonus: "double", 
-            type: "multiplier",
-            bought: false,
-            quantity: 0,
-            multiplierCost: 1  // one-time
-        },
-        { 
-            id: "golden_snot", 
-            name: "✨ Golden Booger✨", 
-            desc: "5x value on click!", 
-            baseCost: 750, 
-            powerBonus: "golden", 
-            type: "multiplier",
-            bought: false,
-            quantity: 0,
-            multiplierCost: 1
-        },
-        { 
-            id: "auto_munch", 
-            name: "🤖 Auto-Muncher", 
-            desc: "Gives 2 booger/sec (auto eat)", 
-            baseCost: 400, 
-            powerBonus: 2, 
-            type: "auto",
-            bought: false,
-            quantity: 0,
-            multiplierCost: 1.4
-        }
+        { id:"sticky", name:"👆 Sticky Finger", desc:"+1 booger/click", baseCost:15, type:"click", bonus:1, qty:0, costScale:1.25 },
+        { id:"gross", name:"🤢 Hungry Goblin", desc:"+3 booger/click", baseCost:65, type:"click", bonus:3, qty:0, costScale:1.35 },
+        { id:"doubleNostril", name:"👃 Double Nostril", desc:"x2 click power", baseCost:200, type:"multiplier", effect:"double", bought:false, qty:0 },
+        { id:"goldenSnot", name:"✨ Golden Booger", desc:"5x click value", baseCost:750, type:"multiplier", effect:"golden", bought:false, qty:0 },
+        { id:"critEye", name:"🎯 Critical Pick", desc:"+5% crit chance (double dmg)", baseCost:300, type:"crit", bonus:5, qty:0, costScale:1.3 },
+        { id:"shinyBooger", name:"💎 Shiny Booger", desc:"+0.2x global multiplier", baseCost:500, type:"shiny", bonus:0.2, qty:0, costScale:1.5 },
+        { id:"autoMunch", name:"🤖 Auto-Muncher", desc:"+2 booger/sec", baseCost:400, type:"auto", bonus:2, qty:0, costScale:1.4 },
+        { id:"autoClicker", name:"🖱️ Auto-Picker", desc:"Auto-click every 2 sec (1 click worth)", baseCost:800, type:"autoclick", bonus:1, qty:0, costScale:1.6 },
+        { id:"boogerFrenzy", name:"🌀 Booger Frenzy", desc:"+10 base click power", baseCost:1200, type:"click", bonus:10, qty:0, costScale:1.45 },
+        { id:"critMastery", name:"⭐ Critical Mastery", desc:"+12% crit chance", baseCost:1800, type:"crit", bonus:12, qty:0, costScale:1.5 },
+        { id:"megaShard", name:"🧬 Prestige Shard", desc:"+1 Prestige Shard (Ultra)", baseCost:5000, type:"prestige", bonus:1, qty:0, costScale:2.0 },
+        { id:"ultimateGoblin", name:"👑 Ultimate Glutton", desc:"+50 click power", baseCost:10000, type:"click", bonus:50, qty:0, costScale:1.7 }
     ];
     
-    // Passive generation
+    let passiveRate = 0;
     let passiveInterval = null;
-    let currentPassiveRate = 0;
     
-    // DOM elements
+    // DOM
     const boogerCountEl = document.getElementById("boogerCount");
     const clickPowerEl = document.getElementById("clickPower");
     const totalEatenEl = document.getElementById("totalEaten");
+    const critChanceEl = document.getElementById("critChance");
     const boogerBtn = document.getElementById("boogerClicker");
     const boogerFaceSpan = document.getElementById("boogerFace");
     const upgradesContainer = document.getElementById("upgradesList");
     const resetBtn = document.getElementById("resetGame");
+    const dailyBonusBtn = document.getElementById("dailyBonusBtn");
+    const luckyDipBtn = document.getElementById("luckyDipBtn");
     
-    // ------------------- COOKIE UTILITIES (pure cookie saving) -----------------
-    function setCookie(name, value, days = 365) {
-        let expires = "";
-        if (days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + encodeURIComponent(JSON.stringify(value)) + expires + "; path=/; SameSite=Lax";
-    }
-    
-    function getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) {
-                const value = c.substring(nameEQ.length, c.length);
-                try {
-                    return JSON.parse(decodeURIComponent(value));
-                } catch(e) { return null; }
-            }
-        }
-        return null;
-    }
-    
-    // Save full game state into a cookie "boogerEaterSave"
-    function saveGameToCookie() {
-        const saveData = {
-            boogers: boogers,
-            clickPower: clickPower,
-            totalEaten: totalEaten,
-            extraMultiplier: extraMultiplier,
-            goldenActive: goldenActive,
-            upgrades: upgrades.map(u => ({
-                id: u.id,
-                bought: u.bought,
-                quantity: u.quantity
-            }))
-        };
-        setCookie("boogerEaterSave", saveData, 365);
-        // optional small console log for debugging
-        // console.log("Game saved to cookie!");
-    }
-    
-    // Load game state from cookie
-    function loadGameFromCookie() {
-        const saved = getCookie("boogerEaterSave");
-        if (!saved) return false;
-        try {
-            boogers = saved.boogers !== undefined ? saved.boogers : 0;
-            clickPower = saved.clickPower !== undefined ? saved.clickPower : 1;
-            totalEaten = saved.totalEaten !== undefined ? saved.totalEaten : 0;
-            extraMultiplier = saved.extraMultiplier !== undefined ? saved.extraMultiplier : 1;
-            goldenActive = saved.goldenActive !== undefined ? saved.goldenActive : false;
-            if (saved.upgrades && Array.isArray(saved.upgrades)) {
-                saved.upgrades.forEach(savedUp => {
-                    const up = upgrades.find(u => u.id === savedUp.id);
-                    if (up) {
-                        up.bought = savedUp.bought || false;
-                        up.quantity = savedUp.quantity || 0;
-                    }
-                });
-            }
-            // recalc passive after load
-            updateStatsUI();
-            renderUpgrades();
-            updatePassiveGeneration();
-            return true;
-        } catch(e) {
-            console.warn("Failed to load cookie save", e);
-            return false;
-        }
-    }
-    
-    // reset all and clear cookie
-    function resetGameAndClearCookie() {
-        // Reset all state
-        boogers = 0;
-        clickPower = 1;
-        totalEaten = 0;
-        extraMultiplier = 1;
-        goldenActive = false;
-        
-        upgrades.forEach(up => {
-            up.bought = false;
-            up.quantity = 0;
-        });
-        
-        // stop passive interval
-        if (passiveInterval) {
-            clearInterval(passiveInterval);
-            passiveInterval = null;
-        }
-        currentPassiveRate = 0;
-        
-        updateStatsUI();
-        renderUpgrades();
-        updatePassiveGeneration(); // will set nothing if no auto
-        saveGameToCookie();        // overwrite cookie with fresh save
-    }
-    
-    // Helper UI update
-    function updateStatsUI() {
+    // helper functions
+    function updateUI() {
         boogerCountEl.innerText = Math.floor(boogers);
         totalEatenEl.innerText = Math.floor(totalEaten);
         let effective = getCurrentClickReward();
         clickPowerEl.innerText = effective;
+        critChanceEl.innerText = `${Math.min(95, critChance)}%`;
     }
     
     function getCurrentClickReward() {
         let base = clickPower;
         let mult = extraMultiplier;
         let golden = goldenActive ? 5 : 1;
-        return base * mult * golden;
+        let shiny = shinyMultiplier;
+        return Math.floor(base * mult * golden * shiny);
     }
     
-    // Floating animation with "eating" effect
-    function createFloatingText(text, x, y) {
-        const div = document.createElement('div');
+    function getCritMultiplier() { return (Math.random() * 100) < critChance ? 2 : 1; }
+    
+    function createFloating(text, x, y) {
+        let div = document.createElement('div');
         div.className = 'float-particle';
         div.innerText = text;
-        div.style.left = `${x - 30}px`;
-        div.style.top = `${y - 30}px`;
-        const dx = (Math.random() - 0.5) * 70;
-        const dy = -45 - Math.random() * 55;
+        div.style.left = `${x - 25}px`;
+        div.style.top = `${y - 25}px`;
+        let dx = (Math.random() - 0.5) * 70;
+        let dy = -45 - Math.random() * 60;
         div.style.setProperty('--dx', `${dx}px`);
         div.style.setProperty('--dy', `${dy}px`);
         document.body.appendChild(div);
         setTimeout(() => div.remove(), 700);
     }
     
-    // Core: gain boogers and automatically eat them (animation & stat update)
-    function gainBoogersAndEat(amount, originElement = null, clickEvent = null) {
-        if (amount <= 0) return;
+    function gainBoogersAndEat(amount, origin=null, event=null, isCrit=false) {
+        if(amount<=0) return;
         boogers += amount;
         totalEaten += amount;
-        updateStatsUI();
-        
-        // get coordinates for floating yummy text
-        let posX, posY;
-        if (clickEvent && typeof clickEvent.clientX === 'number') {
-            posX = clickEvent.clientX;
-            posY = clickEvent.clientY;
-        } else if (originElement) {
-            const rect = originElement.getBoundingClientRect();
-            posX = rect.left + rect.width / 2;
-            posY = rect.top + rect.height / 2;
-        } else {
-            const btnRect = boogerBtn.getBoundingClientRect();
-            posX = btnRect.left + btnRect.width / 2;
-            posY = btnRect.top + btnRect.height / 2;
-        }
-        
-        createFloatingText(`+${Math.floor(amount)} 🍽️`, posX, posY);
-        
-        // Munch animation on the booger face
-        if (boogerFaceSpan) {
+        updateUI();
+        let x=0,y=0;
+        if(event && event.clientX){ x=event.clientX; y=event.clientY; }
+        else { let rect=boogerBtn.getBoundingClientRect(); x=rect.left+rect.width/2; y=rect.top+rect.height/2; }
+        let suffix = isCrit ? " 💥 CRIT!" : " 🍽️";
+        createFloating(`+${Math.floor(amount)}${suffix}`, x, y);
+        if(boogerFaceSpan){
             boogerFaceSpan.classList.add('munch-effect');
-            setTimeout(() => boogerFaceSpan.classList.remove('munch-effect'), 200);
+            setTimeout(()=>boogerFaceSpan.classList.remove('munch-effect'),200);
+            let original=boogerFaceSpan.innerText;
+            boogerFaceSpan.innerText = isCrit ? "💥😝💥" : "😋💨💚";
+            setTimeout(()=>boogerFaceSpan.innerText=original,200);
         }
-        // quick face change for fun
-        const originalText = boogerFaceSpan.innerText;
-        boogerFaceSpan.innerText = "😝💨🤤";
-        setTimeout(() => {
-            if (boogerFaceSpan) boogerFaceSpan.innerText = originalText;
-        }, 150);
     }
     
-    // purchase upgrade logic (cookie save after each purchase)
-    function purchaseUpgrade(upgrade, index) {
+    function onBoogerClick(e) {
+        let baseReward = getCurrentClickReward();
+        let isCritHit = (Math.random()*100) < critChance;
+        let finalReward = baseReward * (isCritHit ? 2 : 1);
+        gainBoogersAndEat(finalReward, boogerBtn, e, isCritHit);
+        updateUI();
+        renderUpgrades();
+        saveGameToCookie();
+    }
+    
+    function purchaseUpgrade(up) {
         let cost = 0;
-        if (upgrade.type === "multiplier") {
-            if (upgrade.bought) return false;
-            cost = upgrade.baseCost;
+        if(up.type === "multiplier" || up.type === "prestige" && up.id==="megaShard") {
+            if(up.bought) return false;
+            cost = up.baseCost;
         } else {
-            let qty = upgrade.quantity || 0;
-            cost = Math.floor(upgrade.baseCost * Math.pow(upgrade.multiplierCost, qty));
+            let qty = up.qty || 0;
+            let scale = up.costScale || 1.3;
+            cost = Math.floor(up.baseCost * Math.pow(scale, qty));
         }
-        
-        if (boogers < cost) return false;
-        
-        // pay
+        if(boogers < cost) return false;
         boogers -= cost;
-        
-        // apply effect
-        if (upgrade.type === "click") {
-            let bonus = upgrade.powerBonus;
-            clickPower += bonus;
-            upgrade.quantity = (upgrade.quantity || 0) + 1;
-            upgrade.bought = true;
-        } 
-        else if (upgrade.type === "multiplier") {
-            if (upgrade.id === "double_dip" && !upgrade.bought) {
-                extraMultiplier = 2;
-                upgrade.bought = true;
-                upgrade.quantity = 1;
-            }
-            else if (upgrade.id === "golden_snot" && !upgrade.bought) {
-                goldenActive = true;
-                upgrade.bought = true;
-                upgrade.quantity = 1;
-            }
+        // Apply effect
+        if(up.type === "click") { clickPower += up.bonus; up.qty = (up.qty||0)+1; }
+        else if(up.type === "multiplier") {
+            if(up.effect === "double") { extraMultiplier = 2; up.bought=true; up.qty=1; }
+            if(up.effect === "golden") { goldenActive = true; up.bought=true; up.qty=1; }
         }
-        else if (upgrade.type === "auto") {
-            upgrade.quantity = (upgrade.quantity || 0) + 1;
-            upgrade.bought = true;
+        else if(up.type === "crit") { critChance += up.bonus; up.qty = (up.qty||0)+1; if(critChance>95) critChance=95; }
+        else if(up.type === "shiny") { shinyMultiplier += up.bonus; up.qty = (up.qty||0)+1; }
+        else if(up.type === "auto") { 
+            up.qty = (up.qty||0)+1;
             updatePassiveGeneration();
         }
-        
-        updateStatsUI();
+        else if(up.type === "autoclick") {
+            up.qty = (up.qty||0)+1;
+            updateAutoClicker();
+        }
+        else if(up.type === "prestige" && up.id==="megaShard") {
+            prestigeShards += up.bonus;
+            up.qty = (up.qty||0)+1;
+            up.bought = false; // can buy multiple times
+        }
+        updateUI();
         renderUpgrades();
-        saveGameToCookie();   // important: save after purchase
+        saveGameToCookie();
         return true;
     }
     
-    // Passive income manager (auto-muncher)
     function updatePassiveGeneration() {
-        let totalRate = 0;
-        for (let up of upgrades) {
-            if (up.type === "auto" && up.quantity > 0) {
-                totalRate += up.powerBonus * up.quantity;
-            }
-        }
-        currentPassiveRate = totalRate;
-        if (passiveInterval) {
-            clearInterval(passiveInterval);
-            passiveInterval = null;
-        }
-        if (totalRate > 0) {
-            passiveInterval = setInterval(() => {
-                if (currentPassiveRate > 0) {
-                    const amount = currentPassiveRate;
-                    // auto gain boogers and auto-eat animation from booger center
-                    boogers += amount;
-                    totalEaten += amount;
-                    updateStatsUI();
-                    const rect = boogerBtn.getBoundingClientRect();
-                    const x = rect.left + rect.width/2;
-                    const y = rect.top + rect.height/2;
-                    createFloatingText(`⚙️ +${amount} auto 🤖`, x, y);
-                    if (boogerFaceSpan) {
-                        boogerFaceSpan.classList.add('munch-effect');
-                        setTimeout(() => boogerFaceSpan.classList.remove('munch-effect'), 150);
-                    }
-                    saveGameToCookie();   // auto-save on passive tick
+        let total=0;
+        for(let u of upgrades) if(u.type==="auto") total += (u.bonus * (u.qty||0));
+        passiveRate = total;
+        if(passiveInterval) clearInterval(passiveInterval);
+        if(passiveRate>0){
+            passiveInterval = setInterval(()=>{
+                if(passiveRate>0){
+                    boogers += passiveRate;
+                    totalEaten += passiveRate;
+                    updateUI();
+                    let rect=boogerBtn.getBoundingClientRect();
+                    createFloating(`⚙️ +${passiveRate} auto 🤖`, rect.left+rect.width/2, rect.top+rect.height/2);
+                    saveGameToCookie();
                 }
-            }, 1000);
+            },1000);
         }
     }
     
-    // Render upgrades list dynamically
+    function updateAutoClicker() {
+        if(autoClickerInterval) clearInterval(autoClickerInterval);
+        let totalAutoClickPower = 0;
+        for(let u of upgrades) if(u.type==="autoclick") totalAutoClickPower += (u.bonus * (u.qty||0));
+        if(totalAutoClickPower>0){
+            autoClickerInterval = setInterval(()=>{
+                let reward = getCurrentClickReward();
+                let isCrit = (Math.random()*100) < critChance;
+                reward = reward * (isCrit ? 2 : 1);
+                if(reward>0){
+                    boogers += reward;
+                    totalEaten += reward;
+                    updateUI();
+                    let rect=boogerBtn.getBoundingClientRect();
+                    createFloating(`🖱️ AUTO +${Math.floor(reward)}${isCrit?"⚡":""}`, rect.left+rect.width/2, rect.top+rect.height/2);
+                    saveGameToCookie();
+                }
+            }, 2000);
+        } else if(autoClickerInterval) { clearInterval(autoClickerInterval); autoClickerInterval=null; }
+    }
+    
     function renderUpgrades() {
         upgradesContainer.innerHTML = "";
-        upgrades.forEach((up, idx) => {
-            let costDisplay = 0;
-            let isAffordable = false;
-            let isDisabled = false;
-            
-            if (up.type === "multiplier") {
-                costDisplay = up.baseCost;
-                isAffordable = (boogers >= costDisplay && !up.bought);
-                isDisabled = up.bought;
-            } else {
-                let qty = up.quantity || 0;
-                costDisplay = Math.floor(up.baseCost * Math.pow(up.multiplierCost, qty));
-                isAffordable = (boogers >= costDisplay);
-                isDisabled = false;
-            }
-            
-            const card = document.createElement('div');
-            card.className = `upgrade-card ${(!isAffordable || isDisabled) ? 'disabled' : ''}`;
-            if (isDisabled && up.type === "multiplier") {
-                card.style.opacity = "0.7";
-                card.style.background = "#3e5a3a";
-                card.style.cursor = "default";
-            }
-            
-            let quantityText = (up.quantity > 0) ? ` x${up.quantity}` : '';
-            card.innerHTML = `
-                <div class="upgrade-info">
-                    <div class="upgrade-name">${up.name}${quantityText}</div>
-                    <div class="upgrade-desc">${up.desc}</div>
-                </div>
-                <div class="upgrade-cost">💰 ${Math.floor(costDisplay)}</div>
-            `;
-            
-            if (!(up.type === "multiplier" && up.bought)) {
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    purchaseUpgrade(up, idx);
-                });
-            }
+        for(let up of upgrades){
+            let cost=0, affordable=false, disabled=false;
+            if(up.type==="multiplier"){ cost=up.baseCost; affordable=boogers>=cost && !up.bought; disabled=up.bought; }
+            else if(up.type==="prestige" && up.id==="megaShard"){ let q=up.qty||0; cost=Math.floor(up.baseCost*Math.pow(2.0, q)); affordable=boogers>=cost; disabled=false; }
+            else { let q=up.qty||0; let scale=up.costScale||1.3; cost=Math.floor(up.baseCost*Math.pow(scale,q)); affordable=boogers>=cost; disabled=false; }
+            let card=document.createElement('div');
+            card.className=`upgrade-card ${(!affordable || disabled)?'disabled':''}`;
+            if(disabled && up.type==="multiplier") card.style.opacity="0.6";
+            let qtyText = (up.qty>0)?` x${up.qty}`:'';
+            let extraStat = (up.type==="crit")? ` (${critChance}%)` : (up.type==="shiny")? ` (${shinyMultiplier.toFixed(1)}x)` : '';
+            card.innerHTML = `<div class="upgrade-info"><div class="upgrade-name">${up.name}${qtyText}${extraStat}</div><div class="upgrade-desc">${up.desc}</div></div><div class="upgrade-cost">💰 ${Math.floor(cost)}</div>`;
+            if(!(up.type==="multiplier" && up.bought)) card.addEventListener('click', (e)=>{ e.stopPropagation(); purchaseUpgrade(up); });
             upgradesContainer.appendChild(card);
-        });
-    }
-    
-    // Click handler for Booger
-    function onBoogerClick(event) {
-        let reward = getCurrentClickReward();
-        if (reward <= 0) reward = 1;
-        gainBoogersAndEat(reward, boogerBtn, event);
-        updateStatsUI();
-        renderUpgrades();   // update affordability after gaining
-        saveGameToCookie(); // immediate save after click
-    }
-    
-    // --- Initialize game & load from cookies ---
-    function init() {
-        const loaded = loadGameFromCookie();
-        if (!loaded) {
-            // first time ever: reset to defaults (already set)
-            resetGameAndClearCookie();
-        } else {
-            // ensure passive starts correctly after load
-            updateStatsUI();
-            renderUpgrades();
-            updatePassiveGeneration();
         }
-        // event listeners
-        boogerBtn.addEventListener("click", onBoogerClick);
-        resetBtn.addEventListener("click", () => {
-            resetGameAndClearCookie();
-            // extra UI update
-            updateStatsUI();
-            renderUpgrades();
-            updatePassiveGeneration();
-            // show reset message as floating
-            const rect = boogerBtn.getBoundingClientRect();
-            createFloatingText("👃 Nose wiped clean! 👃", rect.left + rect.width/2, rect.top + rect.height/2);
-        });
-        // autosave periodically (every 20 seconds, also after actions already, but extra safety)
-        setInterval(() => {
-            saveGameToCookie();
-        }, 20000);
     }
     
-    // start the booger madness
-    init();
+    // DAILY BONUS & LUCKY DIP
+    function claimDaily() {
+        let now = Date.now();
+        let last = lastDailyClaim;
+        let oneDay = 86400000;
+        if(now - last < oneDay) {
+            let hoursLeft = Math.ceil((oneDay - (now-last))/3600000);
+            createFloating(`⏳ Wait ${hoursLeft}h`, window.innerWidth/2, 100);
+            return;
+        }
+        let bonus = 250 + Math.floor(Math.random() * 500) + (prestigeShards*50);
+        boogers += bonus;
+        totalEaten += bonus;
+        lastDailyClaim = now;
+        updateUI();
+        createFloating(`🎁 DAILY +${Math.floor(bonus)} BOOGERS!`, window.innerWidth/2, 150);
+        saveGameToCookie();
+        renderUpgrades();
+    }
+    
+    function luckyDip() {
+        if(boogers < 50) { createFloating("Need 50 boogers!", window.innerWidth/2,100); return; }
+        boogers -= 50;
+        let outcomes = ["+100 boogers","+250 boogers","+5% crit (temporary? no, permanent bonus)","+1 click power","+0.2 shiny","+500 boogers","+2 auto munch level"];
+        let rand = Math.floor(Math.random() * outcomes.length);
+        let msg="";
+        if(rand===0){ boogers+=100; msg="Lucky! +100 boogers!"; }
+        else if(rand===1){ boogers+=250; msg="+250 boogers!"; }
+        else if(rand===2){ critChance = Math.min(95, critChance+5); msg="+5% crit chance!"; }
+        else if(rand===3){ clickPower+=1; msg="+1 click power!"; }
+        else if(rand===4){ shinyMultiplier+=0.2; msg="+0.2x shiny multi!"; }
+        else if(rand===5){ boogers+=500; msg="+500 boogers JACKPOT!"; }
+        else if(rand===6){ 
+            let autoUp = upgrades.find(u=>u.id==="autoMunch");
+            if(autoUp){ autoUp.qty=(autoUp.qty||0)+1; updatePassiveGeneration(); msg="+1 Auto-Muncher level!"; }
+            else msg="+2 auto munch!";
+        }
+        createFloating(`🍀 ${msg}`, window.innerWidth/2, 120);
+        updateUI();
+        renderUpgrades();
+        saveGameToCookie();
+    }
+    
+    function resetGame() {
+        boogers=0; clickPower=1; totalEaten=0; extraMultiplier=1; goldenActive=false; critChance=0; shinyMultiplier=1; prestigeShards=0; lastDailyClaim=0;
+        for(let u of upgrades){
+            u.qty=0; u.bought=false;
+            if(u.type==="multiplier") u.bought=false;
+        }
+        if(passiveInterval) clearInterval(passiveInterval);
+        if(autoClickerInterval) clearInterval(autoClickerInterval);
+        passiveRate=0;
+        updatePassiveGeneration();
+        updateAutoClicker();
+        updateUI();
+        renderUpgrades();
+        saveGameToCookie();
+        createFloating("👃 Nose Wiped Clean!", window.innerWidth/2, 200);
+    }
+    
+    function saveGameToCookie() {
+        let save = {
+            boogers, clickPower, totalEaten, extraMultiplier, goldenActive, critChance, shinyMultiplier, prestigeShards, lastDailyClaim,
+            upgrades: upgrades.map(u=>({id:u.id, qty:u.qty, bought:u.bought}))
+        };
+        setCookie("boogerEpicSave", save, 365);
+    }
+    
+    function loadGame() {
+        let data = getCookie("boogerEpicSave");
+        if(!data) return;
+        boogers = data.boogers||0; clickPower = data.clickPower||1; totalEaten = data.totalEaten||0;
+        extraMultiplier = data.extraMultiplier||1; goldenActive = data.goldenActive||false;
+        critChance = data.critChance||0; shinyMultiplier = data.shinyMultiplier||1; prestigeShards = data.prestigeShards||0;
+        lastDailyClaim = data.lastDailyClaim||0;
+        if(data.upgrades){
+            for(let s of data.upgrades){
+                let up = upgrades.find(u=>u.id===s.id);
+                if(up){ up.qty = s.qty||0; up.bought = s.bought||false; }
+            }
+        }
+        updateUI();
+        updatePassiveGeneration();
+        updateAutoClicker();
+        renderUpgrades();
+    }
+    
+    // INIT
+    loadGame();
+    boogerBtn.addEventListener("click", onBoogerClick);
+    resetBtn.addEventListener("click", resetGame);
+    dailyBonusBtn.addEventListener("click", claimDaily);
+    luckyDipBtn.addEventListener("click", luckyDip);
+    setInterval(()=>saveGameToCookie(), 15000);
+    updateUI();
+    renderUpgrades();
 </script>
 </body>
 </html>
