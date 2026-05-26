@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>👃 BOOGER CHEF | Special Booger Cooking Simulator 🍲</title>
+    <title>👃 BOOGER CHEF | WORKING COOKING SIMULATOR 🍲</title>
     <style>
         * {
             user-select: none;
@@ -28,7 +28,6 @@
             justify-content: center;
         }
 
-        /* Main column */
         .main-panel {
             flex: 2;
             min-width: 300px;
@@ -136,8 +135,10 @@
         .ingredient-list { max-height: 250px; overflow-y: auto; }
         .special-booger-badge { background: #c27e3a; border-radius: 30px; padding: 5px; margin: 5px 0; display: flex; justify-content: space-between; }
 
-        button { background: #e29c45; border: none; border-radius: 40px; padding: 8px 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button { background: #e29c45; border: none; border-radius: 40px; padding: 8px 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.05s; }
+        button:active { transform: scale(0.96); }
         .reset-btn { background: #b34e3a; color: white; width: 100%; }
+        .cook-btn { background: #5f9e4e; color: white; font-size: 1.1rem; width: 100%; }
 
         .discovery-notification {
             position: fixed;
@@ -163,11 +164,23 @@
             border-radius: 40px;
             font-weight: bold;
             border: none;
+            width: 100%;
+            margin: 8px 0;
+            cursor: pointer;
         }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #3e2a1a; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #e29c45; border-radius: 10px; }
+        
+        .recipe-requirements {
+            font-size: 0.7rem;
+            background: #3e2a1a;
+            border-radius: 30px;
+            padding: 5px 10px;
+            margin-top: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -213,9 +226,12 @@
         <!-- Cooking & Recipe Book -->
         <div class="card">
             <h3>📖 RECIPE BOOK & COOKING</h3>
-            <div id="recipeBookList">Unlock ingredients & specials to see recipes</div>
-            <select id="recipeSelect" style="margin-top:8px; width:100%; padding:6px; border-radius:30px;"></select>
-            <button id="cookButton">🍲 COOK SELECTED RECIPE</button>
+            <div id="recipeBookList" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px;">Unlock ingredients & specials to see recipes</div>
+            <select id="recipeSelect">
+                <option value="">-- Select a recipe --</option>
+            </select>
+            <div id="recipeRequirements" class="recipe-requirements"></div>
+            <button id="cookButton" class="cook-btn">🍲 COOK SELECTED RECIPE 🍲</button>
         </div>
     </div>
 </div>
@@ -234,7 +250,7 @@
     let critChance = 0;
     let shinyMultiplier = 1;
     
-    // Special boogers collection (inventory of rare drops)
+    // Special boogers collection
     let specialBoogers = {
         "spicy": { name: "🌶️ Spicy Booger", count: 0, discovered: false, rarity: 12, emoji: "🌶️" },
         "golden": { name: "✨ Golden Booger", count: 0, discovered: false, rarity: 25, emoji: "✨" },
@@ -243,7 +259,7 @@
         "cosmic": { name: "🌌 Cosmic Booger", count: 0, discovered: false, rarity: 100, emoji: "🌌" }
     };
     
-    // Ingredients (can buy from shop, each ingredient unlocks new recipes)
+    // Ingredients
     let ingredients = {
         "cheese": { name: "🧀 Cheese Curd", owned: false, cost: 300, discovered: false, emoji: "🧀" },
         "sauce": { name: "🥫 Secret Sauce", owned: false, cost: 500, discovered: false, emoji: "🥫" },
@@ -252,7 +268,7 @@
         "crystal_salt": { name: "🧂 Crystal Salt", owned: false, cost: 1200, discovered: false, emoji: "🧂" }
     };
     
-    // Recipes: each requires a special booger + ingredients. Gives huge bonuses.
+    // Recipes
     let recipes = {
         "spicy_cheese_bomb": { 
             name: "🌶️ Spicy Cheese Bomb", 
@@ -293,18 +309,9 @@
             effect: { type: "instant_boogers", value: 2000, message: "Delicious pie! +2000 boogers" },
             discovered: false,
             emoji: "🥧💎"
-        },
-        "cosmic_surprise": {
-            name: "🌀 Cosmic Surprise",
-            requiresSpecial: "cosmic",
-            requiresIngredients: ["herbs", "crystal_salt", "sauce", "bread"],
-            effect: { type: "multiplier_boost", value: 0.3, message: "Global shiny +0.3x and +1000 boogers", extraBoogers: 1000 },
-            discovered: false,
-            emoji: "🌀🌌"
         }
     };
     
-    // Helper to update discovery booleans based on owned ingredients + special boogers found
     function updateRecipeDiscoveries() {
         let anyNew = false;
         for(let recId in recipes) {
@@ -332,12 +339,12 @@
         setTimeout(() => div.remove(), 2500);
     }
     
-    // Clicking gives chance to drop special boogers
+    // Special booger drop
     function tryDropSpecialBooger() {
         let dropped = null;
         for(let [id, data] of Object.entries(specialBoogers)) {
             let roll = Math.floor(Math.random() * data.rarity);
-            if(roll === 0 && data.rarity > 0) {
+            if(roll === 0) {
                 data.count++;
                 if(!data.discovered) {
                     data.discovered = true;
@@ -357,7 +364,6 @@
         return false;
     }
     
-    // Core click & gain
     function getClickReward() {
         let base = clickPower;
         let mult = extraMultiplier;
@@ -375,8 +381,8 @@
         let x=event?.clientX || window.innerWidth/2;
         let y=event?.clientY || window.innerHeight/2;
         createFloatingText(`+${amount}${isCrit?" 💥":""}`, x, y);
-        if(document.getElementById("boogerFace")) {
-            let face = document.getElementById("boogerFace");
+        let face = document.getElementById("boogerFace");
+        if(face) {
             face.classList.add('munch-effect');
             setTimeout(()=>face.classList.remove('munch-effect'),200);
         }
@@ -400,8 +406,7 @@
         { id:"doubleNostril", name:"👃 Double Nostril", cost:200, type:"multiplier", effect:"double", bought:false },
         { id:"goldenSnot", name:"✨ Golden Booger", cost:750, type:"multiplier", effect:"golden", bought:false },
         { id:"critEye", name:"🎯 Critical Pick", cost:300, bonusCrit:5, qty:0, costScale:1.3, type:"crit" },
-        { id:"shinyBooger", name:"💎 Shiny Booger", cost:500, bonusShiny:0.2, qty:0, costScale:1.5, type:"shiny" },
-        { id:"megaClick", name:"💪 MEGA Finger", cost:1500, bonusClick:12, qty:0, costScale:1.6, type:"click" }
+        { id:"shinyBooger", name:"💎 Shiny Booger", cost:500, bonusShiny:0.2, qty:0, costScale:1.5, type:"shiny" }
     ];
     
     function purchaseUpgrade(up) {
@@ -438,44 +443,122 @@
         } else { createFloatingText(`Need ${ing.cost} boogers!`, window.innerWidth/2, 300); }
     }
     
-    // Cooking
+    // COOKING - FULLY FIXED
     function cookSelectedRecipe() {
         let select = document.getElementById("recipeSelect");
         let recId = select.value;
-        if(!recId || recId === "") { createFloatingText("No recipe selected!", window.innerWidth/2, 300); return; }
+        
+        if(!recId || recId === "") {
+            createFloatingText("👨‍🍳 Please select a recipe first!", window.innerWidth/2, 300);
+            return;
+        }
+        
         let recipe = recipes[recId];
-        if(!recipe || !recipe.discovered) { createFloatingText("Recipe not discovered yet!", window.innerWidth/2, 300); return; }
+        if(!recipe) {
+            createFloatingText("Recipe not found!", window.innerWidth/2, 300);
+            return;
+        }
+        
+        if(!recipe.discovered) {
+            createFloatingText(`🔒 Recipe "${recipe.name}" not discovered yet!`, window.innerWidth/2, 300);
+            return;
+        }
+        
+        // Check special booger
         let specialNeeded = specialBoogers[recipe.requiresSpecial];
-        if(!specialNeeded || specialNeeded.count <= 0) { createFloatingText(`Missing ${specialNeeded?.name || "special booger"}!`, window.innerWidth/2, 300); return; }
-        // consume one special booger
+        if(!specialNeeded || specialNeeded.count <= 0) {
+            createFloatingText(`❌ Missing ${recipe.requiresSpecial} special booger! Need to find more by clicking.`, window.innerWidth/2, 300);
+            return;
+        }
+        
+        // Check all ingredients
+        let missingIngredients = [];
+        for(let ingId of recipe.requiresIngredients) {
+            let ing = ingredients[ingId];
+            if(!ing || !ing.owned) {
+                missingIngredients.push(ingId);
+            }
+        }
+        
+        if(missingIngredients.length > 0) {
+            let missingNames = missingIngredients.map(id => ingredients[id]?.name || id).join(", ");
+            createFloatingText(`❌ Missing ingredients: ${missingNames}. Buy them from the shop!`, window.innerWidth/2, 300);
+            return;
+        }
+        
+        // CONSUME resources
         specialNeeded.count--;
-        // apply effect
+        
+        // Apply effect
         let effect = recipe.effect;
+        let rewardMsg = "";
+        
         if(effect.type === "instant_boogers") {
             boogers += effect.value;
             totalEaten += effect.value;
-            createFloatingText(`🍲 ${recipe.name}: ${effect.message}`, window.innerWidth/2, 200);
+            rewardMsg = effect.message;
         } else if(effect.type === "click_permanent") {
             clickPower += effect.value;
-            createFloatingText(`🍲 ${recipe.name}: ${effect.message}`, window.innerWidth/2, 200);
+            rewardMsg = effect.message;
         } else if(effect.type === "crit_bonus") {
             critChance += effect.value;
-            if(critChance>85) critChance=85;
-            createFloatingText(`🍲 ${recipe.name}: ${effect.message}`, window.innerWidth/2, 200);
+            if(critChance > 85) critChance = 85;
+            rewardMsg = effect.message;
         } else if(effect.type === "shiny_bonus") {
             shinyMultiplier += effect.value;
-            createFloatingText(`🍲 ${recipe.name}: ${effect.message}`, window.innerWidth/2, 200);
-        } else if(effect.type === "multiplier_boost") {
-            shinyMultiplier += effect.value;
-            boogers += effect.extraBoogers || 0;
-            totalEaten += effect.extraBoogers || 0;
-            createFloatingText(`🍲 ${recipe.name}: ${effect.message}`, window.innerWidth/2, 200);
+            rewardMsg = effect.message;
         }
+        
+        // Success message and animation
+        createFloatingText(`🍳 COOKED! ${recipe.name} 🍳`, window.innerWidth/2, 200);
+        setTimeout(() => {
+            createFloatingText(`✨ ${rewardMsg} ✨`, window.innerWidth/2, 150);
+        }, 400);
+        
+        // Update everything
         updateUI();
         renderSpecialBoogers();
+        renderUpgrades();
         renderRecipeBook();
         updateRecipeSelect();
+        updateRecipeRequirementsDisplay();
         saveGameToCookie();
+        
+        // Show extra celebration
+        let face = document.getElementById("boogerFace");
+        if(face) {
+            face.style.transform = "scale(1.1)";
+            setTimeout(() => { if(face) face.style.transform = ""; }, 300);
+        }
+    }
+    
+    // Display recipe requirements when selected
+    function updateRecipeRequirementsDisplay() {
+        let select = document.getElementById("recipeSelect");
+        let recId = select.value;
+        let container = document.getElementById("recipeRequirements");
+        
+        if(!recId || recId === "" || !recipes[recId]) {
+            container.innerHTML = "👨‍🍳 Select a recipe to see requirements";
+            return;
+        }
+        
+        let recipe = recipes[recId];
+        if(!recipe.discovered) {
+            container.innerHTML = "🔒 Recipe not discovered yet";
+            return;
+        }
+        
+        let special = specialBoogers[recipe.requiresSpecial];
+        let specialStatus = special && special.count > 0 ? `✅ ${special.name} x${special.count}` : `❌ ${special?.name || "Unknown"} (0 owned)`;
+        
+        let ingredientsList = recipe.requiresIngredients.map(ingId => {
+            let ing = ingredients[ingId];
+            let owned = ing && ing.owned;
+            return owned ? `✅ ${ing.name}` : `❌ ${ing?.name || ingId}`;
+        }).join(", ");
+        
+        container.innerHTML = `🔪 Requires: ${specialStatus} | 🧂 ${ingredientsList}<br>🎁 Reward: ${recipe.effect.message}`;
     }
     
     // RENDER FUNCTIONS
@@ -547,7 +630,13 @@
                 let div = document.createElement('div');
                 div.className = 'ingredient-card';
                 div.style.background = "#8b6946";
+                div.style.cursor = "pointer";
                 div.innerHTML = `<span>${rec.emoji} ${rec.name}</span><span style="font-size:0.7rem;">✨ ${rec.effect.message.substring(0,35)}</span>`;
+                div.addEventListener('click', () => {
+                    let select = document.getElementById("recipeSelect");
+                    select.value = id;
+                    updateRecipeRequirementsDisplay();
+                });
                 container.appendChild(div);
             }
         }
@@ -557,7 +646,8 @@
     function updateRecipeSelect() {
         let select = document.getElementById("recipeSelect");
         if(!select) return;
-        select.innerHTML = "";
+        let currentValue = select.value;
+        select.innerHTML = '<option value="">-- Select a recipe --</option>';
         for(let [id, rec] of Object.entries(recipes)) {
             if(rec.discovered) {
                 let option = document.createElement('option');
@@ -566,11 +656,10 @@
                 select.appendChild(option);
             }
         }
-        if(select.options.length===0) {
-            let opt = document.createElement('option');
-            opt.innerText = "🔒 No recipes yet...";
-            select.appendChild(opt);
+        if(currentValue && recipes[currentValue]?.discovered) {
+            select.value = currentValue;
         }
+        updateRecipeRequirementsDisplay();
     }
     
     function createFloatingText(text, x, y) {
@@ -633,6 +722,8 @@
     document.getElementById("boogerClicker").addEventListener("click", onBoogerClick);
     document.getElementById("resetGame").addEventListener("click", resetGame);
     document.getElementById("cookButton").addEventListener("click", cookSelectedRecipe);
+    document.getElementById("recipeSelect").addEventListener("change", updateRecipeRequirementsDisplay);
+    
     loadGame();
     setInterval(()=>saveGameToCookie(), 15000);
 </script>
