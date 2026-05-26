@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>👃 BOOGER CHEF | WORKING COOKING SIMULATOR 🍲</title>
+    <title>👃 BOOGER CHEF | WORKING CRAFTING TABLE 🔨</title>
     <style>
         * {
             user-select: none;
@@ -15,12 +15,12 @@
             margin: 0;
             min-height: 100vh;
             background: linear-gradient(145deg, #1b4a2e 0%, #0a2a1a 100%);
-            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Comic Neue', cursive;
+            font-family: 'Segoe UI', 'Quicksand', system-ui, monospace;
             padding: 20px;
         }
 
         .game-container {
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
@@ -29,18 +29,28 @@
         }
 
         .main-panel {
-            flex: 2;
-            min-width: 300px;
+            flex: 1.3;
+            min-width: 260px;
             background: rgba(255,241,184,0.94);
-            border-radius: 60px;
+            border-radius: 40px;
             padding: 20px;
             box-shadow: 0 25px 40px rgba(0,0,0,0.5);
             text-align: center;
         }
 
+        .crafting-panel {
+            flex: 2;
+            min-width: 420px;
+            background: #5c3e1f;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.5), inset 0 1px 0 #8b6946;
+            border: 4px solid #8b5a2b;
+        }
+
         .side-panel {
-            flex: 1.2;
-            min-width: 280px;
+            flex: 1.1;
+            min-width: 250px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -48,45 +58,38 @@
 
         .card {
             background: rgba(46, 34, 21, 0.95);
-            border-radius: 50px;
+            border-radius: 30px;
             padding: 18px;
             color: #ffefcf;
             box-shadow: 0 8px 20px black;
         }
 
-        .card h3 {
-            margin: 0 0 12px 0;
-            font-size: 1.4rem;
-            text-align: center;
-            color: #ffd966;
-        }
-
         .stats {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             margin-bottom: 20px;
         }
 
         .stat-card {
             background: #4f3722;
-            border-radius: 40px;
-            padding: 8px 16px;
+            border-radius: 30px;
+            padding: 6px 12px;
             flex: 1;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: #ffdd99;
         }
 
         .booger-btn {
             background: radial-gradient(circle at 35% 30%, #8abf4a, #2c5e12);
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             margin: 10px auto;
             cursor: pointer;
@@ -97,49 +100,103 @@
             transition: transform 0.05s;
         }
         .booger-btn:active { transform: scale(0.96); }
-        .booger-face { font-size: 4.5rem; }
+        .booger-face { font-size: 3.5rem; }
 
-        .float-particle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1000;
-            font-size: 1.4rem;
-            font-weight: bold;
-            animation: flyEat 0.6s ease-out forwards;
+        /* CRAFTING GRID */
+        .crafting-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background: #6b4c2a;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 3px solid #c99e6f;
+            box-shadow: inset 0 0 0 2px #3e2a1a;
         }
-        @keyframes flyEat {
-            0% { opacity: 1; transform: translate(0,0) scale(0.7);}
-            100% { opacity: 0; transform: translate(var(--dx,20px), var(--dy,-80px)) scale(0.4);}
-        }
-
-        .munch-effect { animation: munch 0.2s ease-in-out; }
-        @keyframes munch {
-            50% { transform: scale(1.2); text-shadow: 0 0 10px gold; }
-        }
-
-        .upgrade-card, .ingredient-card, .recipe-card {
-            background: #6f4e2e;
-            border-radius: 50px;
-            padding: 8px 15px;
-            margin: 8px 0;
+        .craft-slot {
+            background: #8b6946;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.05s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 0 #ffefcf40;
+            font-weight: bold;
+            text-align: center;
+            gap: 5px;
+            position: relative;
+        }
+        .craft-slot:active { transform: scale(0.97); }
+        .craft-slot.empty {
+            background: #5c3e1f;
+            opacity: 0.7;
+        }
+        .craft-slot.filled {
+            background: #e9b56e;
+            border: 2px solid #ffd966;
+        }
+        .slot-emoji { font-size: 2rem; }
+        .slot-name {
+            font-size: 0.65rem;
+            background: #2c2b26cc;
+            padding: 2px 6px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .inventory-ingredients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            max-height: 180px;
+            overflow-y: auto;
+            background: #4f3722;
+            padding: 10px;
+            border-radius: 20px;
+        }
+        .inv-item {
+            background: #c99e6f;
+            padding: 8px 12px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
             transition: 0.05s;
+            font-weight: bold;
+            border: 2px solid #ffd966;
         }
-        .upgrade-card:active, .ingredient-card:active { transform: scale(0.98); }
-        .disabled { opacity: 0.5; pointer-events: none; }
-        .cost-badge { background: #f5bc70; padding: 4px 12px; border-radius: 40px; color: #3f2a12; font-weight: bold; }
-
-        .ingredient-list { max-height: 250px; overflow-y: auto; }
-        .special-booger-badge { background: #c27e3a; border-radius: 30px; padding: 5px; margin: 5px 0; display: flex; justify-content: space-between; }
-
-        button { background: #e29c45; border: none; border-radius: 40px; padding: 8px 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.05s; }
+        .inv-item:active { transform: scale(0.96); }
+        
+        .special-booger-badge {
+            background: #c27e3a;
+            border-radius: 30px;
+            padding: 6px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        button {
+            background: #e29c45;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.05s;
+            font-family: inherit;
+        }
         button:active { transform: scale(0.96); }
         .reset-btn { background: #b34e3a; color: white; width: 100%; }
-        .cook-btn { background: #5f9e4e; color: white; font-size: 1.1rem; width: 100%; }
-
+        .craft-btn { background: #5f9e4e; color: white; font-size: 1.2rem; width: 100%; }
+        
         .discovery-notification {
             position: fixed;
             top: 20%;
@@ -153,33 +210,42 @@
             z-index: 2000;
             animation: fadeOut 2s forwards;
             pointer-events: none;
-            text-align: center;
             white-space: nowrap;
         }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         
-        select {
-            background: #f5bc70;
-            padding: 8px;
-            border-radius: 40px;
+        .float-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 1.3rem;
             font-weight: bold;
-            border: none;
-            width: 100%;
-            margin: 8px 0;
+            animation: flyEat 0.6s ease-out forwards;
+        }
+        @keyframes flyEat {
+            0% { opacity: 1; transform: translate(0,0) scale(0.7);}
+            100% { opacity: 0; transform: translate(var(--dx,20px), var(--dy,-80px)) scale(0.4);}
+        }
+        
+        .upgrade-card {
+            background: #6f4e2e;
+            border-radius: 30px;
+            padding: 8px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
             cursor: pointer;
         }
+        .upgrade-card.disabled { opacity: 0.5; pointer-events: none; }
+        .cost-badge { background: #f5bc70; padding: 4px 12px; border-radius: 40px; color: #3f2a12; font-weight: bold; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #3e2a1a; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #e29c45; border-radius: 10px; }
         
-        .recipe-requirements {
-            font-size: 0.7rem;
-            background: #3e2a1a;
-            border-radius: 30px;
-            padding: 5px 10px;
-            margin-top: 5px;
-            text-align: center;
+        .selected-for-craft {
+            background: #ffaa33;
+            box-shadow: 0 0 0 3px gold;
         }
     </style>
 </head>
@@ -187,62 +253,68 @@
 <div class="game-container">
     <div class="main-panel">
         <h1 style="margin:0 0 5px; color:#5a3e1b;">👃 BOOGER CHEF 🍳</h1>
-        <div class="sub" style="background:#2c2b26; display:inline-block; padding:4px 16px; border-radius:50px; color:#f9e7b3;">Cook special recipes with rare boogers!</div>
-
         <div class="stats">
             <div class="stat-card"><div class="stat-label">💚 BOOGERS</div><div class="stat-value" id="boogerCount">0</div></div>
             <div class="stat-card"><div class="stat-label">⚡ POWER</div><div class="stat-value" id="clickPower">1</div></div>
-            <div class="stat-card"><div class="stat-label">🍽️ EATEN</div><div class="stat-value" id="totalEaten">0</div></div>
             <div class="stat-card"><div class="stat-label">💥 CRIT</div><div class="stat-value" id="critChance">0%</div></div>
         </div>
+        <div class="booger-btn" id="boogerClicker"><div class="booger-face" id="boogerFace">💚👃💚</div></div>
+        <div><h3>🚀 UPGRADES</h3><div id="upgradesList" style="max-height: 200px; overflow-y: auto;"></div></div>
+        <button class="reset-btn" id="resetGame">🧽 RESET GAME</button>
+        <div style="font-size:0.7rem; margin-top:8px;">💡 Click ingredients → then click empty slot on table!</div>
+    </div>
 
-        <div class="booger-btn" id="boogerClicker">
-            <div class="booger-face" id="boogerFace">💚👃💚</div>
+    <div class="crafting-panel">
+        <h2 style="text-align:center; color:#ffd966; margin:0 0 10px;">🧱 CRAFTING TABLE 🧱</h2>
+        <div class="crafting-grid" id="craftingGrid"></div>
+        <div style="display: flex; gap: 10px;">
+            <button id="clearCraftBtn" style="flex:1;">🗑️ CLEAR</button>
+            <button id="craftActionBtn" class="craft-btn">🔨 CRAFT! 🔨</button>
         </div>
-
-        <div style="margin-top: 15px;">
-            <h3>🚀 UPGRADES</h3>
-            <div id="upgradesList" style="max-height: 250px; overflow-y: auto;"></div>
+        <div style="background:#3e2a1a; border-radius:20px; padding:8px; margin-top:10px;">
+            <div style="font-size:0.8rem;">📦 INVENTORY (Click to add to table)</div>
+            <div id="inventoryIngredients" class="inventory-ingredients"></div>
         </div>
-        <button class="reset-btn" id="resetGame">🧽 RESET EVERYTHING</button>
-        <div style="font-size: 0.7rem; margin-top: 10px;">🍪 Auto-saves using cookies | Click booger to find rare specials!</div>
+        <div id="craftingResult" style="font-size:0.8rem; text-align:center; margin-top:8px; background:#2c2b26; border-radius:30px; padding:8px;">
+            ✨ Click ingredients, then click an empty slot on the crafting table!
+        </div>
     </div>
 
     <div class="side-panel">
-        <!-- Special Boogers Collection -->
         <div class="card">
-            <h3>✨ SPECIAL BOOGERS ✨</h3>
-            <div id="specialBoogersList">Click the main booger to find rare ones!</div>
-            <div style="font-size:0.75rem; margin-top:8px;">⭐ Rare drops from clicking! Used in recipes.</div>
+            <h3>✨ SPECIAL BOOGERS</h3>
+            <div id="specialBoogersList">Click the booger to find rare ones!</div>
         </div>
-
-        <!-- Ingredient Shop -->
         <div class="card">
             <h3>🛒 INGREDIENT SHOP</h3>
-            <div id="shopIngredientsList" class="ingredient-list">Loading...</div>
-            <div style="font-size:0.7rem;">Buy ingredients to unlock recipes!</div>
-        </div>
-
-        <!-- Cooking & Recipe Book -->
-        <div class="card">
-            <h3>📖 RECIPE BOOK & COOKING</h3>
-            <div id="recipeBookList" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px;">Unlock ingredients & specials to see recipes</div>
-            <select id="recipeSelect">
-                <option value="">-- Select a recipe --</option>
-            </select>
-            <div id="recipeRequirements" class="recipe-requirements"></div>
-            <button id="cookButton" class="cook-btn">🍲 COOK SELECTED RECIPE 🍲</button>
+            <div id="shopIngredientsList" style="max-height: 250px; overflow-y: auto;"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // ---------- COOKIE UTILS ----------
-    function setCookie(name, value, days=365) { let d=new Date(); d.setTime(d.getTime()+days*86400000); document.cookie=name+"="+encodeURIComponent(JSON.stringify(value))+"; expires="+d.toUTCString()+"; path=/; SameSite=Lax"; }
-    function getCookie(name) { let ca=document.cookie.split(';'); for(let i=0;i<ca.length;i++){ let c=ca[i].trim(); if(c.indexOf(name+"=")===0) try{ return JSON.parse(decodeURIComponent(c.substring(name.length+1))); }catch(e){ return null; } } return null; }
+    // ---------- COOKIE SAVE/LOAD (FULLY WORKING) ----------
+    function setCookie(name, value, days=365) { 
+        let d = new Date(); 
+        d.setTime(d.getTime() + days * 86400000); 
+        document.cookie = name + "=" + encodeURIComponent(JSON.stringify(value)) + "; expires=" + d.toUTCString() + "; path=/; SameSite=Lax"; 
+    }
+    
+    function getCookie(name) { 
+        let ca = document.cookie.split(';'); 
+        for(let i=0; i<ca.length; i++) { 
+            let c = ca[i].trim(); 
+            if(c.indexOf(name + "=") === 0) { 
+                try { 
+                    return JSON.parse(decodeURIComponent(c.substring(name.length + 1))); 
+                } catch(e) { return null; } 
+            } 
+        } 
+        return null; 
+    }
 
     // ----- GAME STATE -----
-    let boogers = 0;
+    let boogers = 150;
     let clickPower = 1;
     let totalEaten = 0;
     let extraMultiplier = 1;
@@ -250,22 +322,22 @@
     let critChance = 0;
     let shinyMultiplier = 1;
     
-    // Special boogers collection
+    // Special boogers
     let specialBoogers = {
-        "spicy": { name: "🌶️ Spicy Booger", count: 0, discovered: false, rarity: 12, emoji: "🌶️" },
-        "golden": { name: "✨ Golden Booger", count: 0, discovered: false, rarity: 25, emoji: "✨" },
-        "magic": { name: "🔮 Magic Booger", count: 0, discovered: false, rarity: 40, emoji: "🔮" },
-        "crystal": { name: "💎 Crystal Booger", count: 0, discovered: false, rarity: 60, emoji: "💎" },
-        "cosmic": { name: "🌌 Cosmic Booger", count: 0, discovered: false, rarity: 100, emoji: "🌌" }
+        "spicy": { name: "🌶️ Spicy Booger", count: 1, discovered: true, rarity: 15, emoji: "🌶️" },
+        "golden": { name: "✨ Golden Booger", count: 0, discovered: false, rarity: 30, emoji: "✨" },
+        "magic": { name: "🔮 Magic Booger", count: 0, discovered: false, rarity: 50, emoji: "🔮" },
+        "crystal": { name: "💎 Crystal Booger", count: 0, discovered: false, rarity: 70, emoji: "💎" },
+        "cosmic": { name: "🌌 Cosmic Booger", count: 0, discovered: false, rarity: 120, emoji: "🌌" }
     };
     
-    // Ingredients
+    // Ingredients (Shop items)
     let ingredients = {
-        "cheese": { name: "🧀 Cheese Curd", owned: false, cost: 300, discovered: false, emoji: "🧀" },
-        "sauce": { name: "🥫 Secret Sauce", owned: false, cost: 500, discovered: false, emoji: "🥫" },
-        "herbs": { name: "🌿 Magic Herbs", owned: false, cost: 800, discovered: false, emoji: "🌿" },
-        "bread": { name: "🍞 Stale Bread", owned: false, cost: 400, discovered: false, emoji: "🍞" },
-        "crystal_salt": { name: "🧂 Crystal Salt", owned: false, cost: 1200, discovered: false, emoji: "🧂" }
+        "cheese": { name: "🧀 Cheese Curd", owned: false, cost: 300, emoji: "🧀" },
+        "sauce": { name: "🥫 Secret Sauce", owned: false, cost: 500, emoji: "🥫" },
+        "herbs": { name: "🌿 Magic Herbs", owned: false, cost: 800, emoji: "🌿" },
+        "bread": { name: "🍞 Stale Bread", owned: false, cost: 400, emoji: "🍞" },
+        "crystal_salt": { name: "🧂 Crystal Salt", owned: false, cost: 1200, emoji: "🧂" }
     };
     
     // Recipes
@@ -274,7 +346,7 @@
             name: "🌶️ Spicy Cheese Bomb", 
             requiresSpecial: "spicy", 
             requiresIngredients: ["cheese", "sauce"],
-            effect: { type: "instant_boogers", value: 800, message: "+800 boogers instantly!" },
+            effect: { type: "instant_boogers", value: 800, message: "+800 boogers!" },
             discovered: false,
             emoji: "🧀🌶️"
         },
@@ -282,7 +354,7 @@
             name: "✨ Golden Herb Feast",
             requiresSpecial: "golden",
             requiresIngredients: ["herbs", "bread"],
-            effect: { type: "click_permanent", value: 5, message: "Click power +5 permanently!" },
+            effect: { type: "click_permanent", value: 5, message: "Click power +5!" },
             discovered: false,
             emoji: "✨🌿"
         },
@@ -298,106 +370,17 @@
             name: "🌌 Cosmic Delight",
             requiresSpecial: "cosmic",
             requiresIngredients: ["crystal_salt", "sauce", "cheese"],
-            effect: { type: "shiny_bonus", value: 0.5, message: "Shiny multiplier +0.5x!" },
+            effect: { type: "shiny_bonus", value: 0.5, message: "Shiny +0.5x!" },
             discovered: false,
             emoji: "🌌✨"
-        },
-        "crystal_booger_pie": {
-            name: "💎 Crystal Booger Pie",
-            requiresSpecial: "crystal",
-            requiresIngredients: ["bread", "crystal_salt", "cheese"],
-            effect: { type: "instant_boogers", value: 2000, message: "Delicious pie! +2000 boogers" },
-            discovered: false,
-            emoji: "🥧💎"
         }
     };
     
-    function updateRecipeDiscoveries() {
-        let anyNew = false;
-        for(let recId in recipes) {
-            let rec = recipes[recId];
-            let specialOwned = (specialBoogers[rec.requiresSpecial]?.count > 0);
-            let ingredientsOwned = rec.requiresIngredients.every(ing => ingredients[ing]?.owned === true);
-            if(specialOwned && ingredientsOwned && !rec.discovered) {
-                rec.discovered = true;
-                anyNew = true;
-                showDiscoveryNotification(`📖 New recipe discovered: ${rec.name} ${rec.emoji}!`);
-            }
-        }
-        if(anyNew) {
-            renderRecipeBook();
-            updateRecipeSelect();
-            saveGameToCookie();
-        }
-    }
+    // Crafting grid (3x3) - each slot: { type: "ingredient" or "special", id: string }
+    let craftingGrid = Array(9).fill(null);
     
-    function showDiscoveryNotification(msg) {
-        let div = document.createElement('div');
-        div.className = 'discovery-notification';
-        div.innerText = msg;
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 2500);
-    }
-    
-    // Special booger drop
-    function tryDropSpecialBooger() {
-        let dropped = null;
-        for(let [id, data] of Object.entries(specialBoogers)) {
-            let roll = Math.floor(Math.random() * data.rarity);
-            if(roll === 0) {
-                data.count++;
-                if(!data.discovered) {
-                    data.discovered = true;
-                    showDiscoveryNotification(`🔍 Discovered: ${data.name}! You can now use it in recipes.`);
-                    updateRecipeDiscoveries();
-                }
-                dropped = data;
-                break;
-            }
-        }
-        if(dropped) {
-            createFloatingText(`✨ +1 ${dropped.name}!`, window.innerWidth/2, 200);
-            renderSpecialBoogers();
-            saveGameToCookie();
-            return true;
-        }
-        return false;
-    }
-    
-    function getClickReward() {
-        let base = clickPower;
-        let mult = extraMultiplier;
-        let golden = goldenActive ? 5 : 1;
-        let shiny = shinyMultiplier;
-        let crit = (Math.random() * 100) < critChance ? 2 : 1;
-        return Math.floor(base * mult * golden * shiny * crit);
-    }
-    
-    function gainBoogersAndEat(amount, event=null, isCrit=false) {
-        if(amount<=0) return;
-        boogers += amount;
-        totalEaten += amount;
-        updateUI();
-        let x=event?.clientX || window.innerWidth/2;
-        let y=event?.clientY || window.innerHeight/2;
-        createFloatingText(`+${amount}${isCrit?" 💥":""}`, x, y);
-        let face = document.getElementById("boogerFace");
-        if(face) {
-            face.classList.add('munch-effect');
-            setTimeout(()=>face.classList.remove('munch-effect'),200);
-        }
-    }
-    
-    function onBoogerClick(e) {
-        let reward = getClickReward();
-        let isCrit = (Math.random()*100) < critChance;
-        if(isCrit) reward = reward * 2;
-        gainBoogersAndEat(reward, e, isCrit);
-        tryDropSpecialBooger();
-        updateUI();
-        renderUpgrades();
-        saveGameToCookie();
-    }
+    // Selected item for placement
+    let selectedItem = null; // { type: "ingredient" or "special", id: string }
     
     // Upgrades
     let upgrades = [
@@ -405,327 +388,403 @@
         { id:"gross", name:"🤢 Hungry Goblin", cost:65, bonusClick:3, qty:0, costScale:1.35, type:"click" },
         { id:"doubleNostril", name:"👃 Double Nostril", cost:200, type:"multiplier", effect:"double", bought:false },
         { id:"goldenSnot", name:"✨ Golden Booger", cost:750, type:"multiplier", effect:"golden", bought:false },
-        { id:"critEye", name:"🎯 Critical Pick", cost:300, bonusCrit:5, qty:0, costScale:1.3, type:"crit" },
-        { id:"shinyBooger", name:"💎 Shiny Booger", cost:500, bonusShiny:0.2, qty:0, costScale:1.5, type:"shiny" }
+        { id:"critEye", name:"🎯 Critical Pick", cost:300, bonusCrit:5, qty:0, costScale:1.3, type:"crit" }
     ];
     
-    function purchaseUpgrade(up) {
-        let cost = up.cost;
-        if(up.type === "multiplier") { if(up.bought) return false; cost = up.cost; }
-        else { let q = up.qty||0; let scale = up.costScale||1.3; cost = Math.floor(up.cost * Math.pow(scale, q)); }
-        if(boogers < cost) return false;
-        boogers -= cost;
-        if(up.type === "click") { clickPower += up.bonusClick; up.qty++; }
-        else if(up.type === "multiplier") { if(up.effect==="double") extraMultiplier=2; if(up.effect==="golden") goldenActive=true; up.bought=true; }
-        else if(up.type === "crit") { critChance += up.bonusCrit; if(critChance>85) critChance=85; up.qty++; }
-        else if(up.type === "shiny") { shinyMultiplier += up.bonusShiny; up.qty++; }
-        updateUI();
-        renderUpgrades();
-        saveGameToCookie();
-        return true;
+    // ---------- Helper Functions ----------
+    function saveGame() { 
+        let saveData = { 
+            boogers, clickPower, totalEaten, extraMultiplier, goldenActive, critChance, shinyMultiplier,
+            specialBoogers, ingredients, recipes, 
+            upgrades: upgrades.map(u => ({ id: u.id, qty: u.qty, bought: u.bought })),
+            craftingGrid: craftingGrid.map(slot => slot ? { type: slot.type, id: slot.id } : null)
+        }; 
+        setCookie("boogerChefWorking", saveData, 365);
+        console.log("Game saved!");
     }
     
-    // Ingredient Shop
-    function purchaseIngredient(ingId) {
-        let ing = ingredients[ingId];
-        if(ing.owned) return;
-        if(boogers >= ing.cost) {
-            boogers -= ing.cost;
-            ing.owned = true;
-            if(!ing.discovered) {
-                ing.discovered = true;
-                showDiscoveryNotification(`🛒 New ingredient unlocked: ${ing.name}! Check recipe book.`);
-                updateRecipeDiscoveries();
+    function loadGame() { 
+        let data = getCookie("boogerChefWorking"); 
+        if(data) { 
+            boogers = data.boogers ?? 150;
+            clickPower = data.clickPower ?? 1;
+            totalEaten = data.totalEaten ?? 0;
+            extraMultiplier = data.extraMultiplier ?? 1;
+            goldenActive = data.goldenActive ?? false;
+            critChance = data.critChance ?? 0;
+            shinyMultiplier = data.shinyMultiplier ?? 1;
+            if(data.specialBoogers) for(let k in data.specialBoogers) if(specialBoogers[k]) Object.assign(specialBoogers[k], data.specialBoogers[k]);
+            if(data.ingredients) for(let k in data.ingredients) if(ingredients[k]) ingredients[k].owned = data.ingredients[k].owned;
+            if(data.recipes) for(let k in data.recipes) if(recipes[k]) recipes[k].discovered = data.recipes[k].discovered;
+            if(data.upgrades) for(let s of data.upgrades) { let up = upgrades.find(u => u.id === s.id); if(up) { up.qty = s.qty || 0; up.bought = s.bought || false; } }
+            if(data.craftingGrid && Array.isArray(data.craftingGrid)) {
+                craftingGrid = data.craftingGrid.map(slot => slot ? { type: slot.type, id: slot.id } : null);
             }
-            renderShopIngredients();
-            updateUI();
-            saveGameToCookie();
-        } else { createFloatingText(`Need ${ing.cost} boogers!`, window.innerWidth/2, 300); }
+        }
+        updateUI(); 
+        renderUpgrades(); 
+        renderSpecialBoogers(); 
+        renderShop(); 
+        renderInventory(); 
+        renderCraftingGrid(); 
+        updateCraftingPreview();
     }
     
-    // COOKING - FULLY FIXED
-    function cookSelectedRecipe() {
-        let select = document.getElementById("recipeSelect");
-        let recId = select.value;
+    function getClickReward() { 
+        let base = clickPower, mult = extraMultiplier, golden = goldenActive ? 5 : 1, shiny = shinyMultiplier; 
+        let crit = (Math.random() * 100) < critChance ? 2 : 1; 
+        return Math.floor(base * mult * golden * shiny * crit); 
+    }
+    
+    function gainBoogers(amount, isCrit = false) { 
+        boogers += amount; 
+        totalEaten += amount; 
+        updateUI(); 
+        createFloatingText(`+${amount}${isCrit ? "💥" : ""}`, window.innerWidth / 2, 200); 
+        saveGame();
+    }
+    
+    function onBoogerClick(e) { 
+        let reward = getClickReward(); 
+        let isCrit = (Math.random() * 100) < critChance; 
+        if(isCrit) reward *= 2; 
+        gainBoogers(reward, isCrit); 
+        tryDropSpecialBooger(); 
+        updateUI(); 
+        renderUpgrades(); 
+        saveGame();
+    }
+    
+    function tryDropSpecialBooger() { 
+        for(let id in specialBoogers) { 
+            let d = specialBoogers[id]; 
+            if(Math.random() * d.rarity < 1 && !d.discovered) { 
+                d.count++; 
+                d.discovered = true; 
+                showNotif(`🔍 Discovered: ${d.name}!`); 
+                renderSpecialBoogers(); 
+                renderInventory(); 
+                saveGame(); 
+                break; 
+            } else if(Math.random() * (d.rarity * 2) < 1 && d.count < 50) {
+                d.count++;
+                renderSpecialBoogers();
+                renderInventory();
+                saveGame();
+                break;
+            }
+        } 
+    }
+    
+    function purchaseUpgrade(up) { 
+        let cost = up.cost; 
+        if(up.type === "multiplier") { if(up.bought) return false; cost = up.cost; } 
+        else { let q = up.qty || 0; cost = Math.floor(up.cost * Math.pow(up.costScale || 1.3, q)); } 
+        if(boogers < cost) return false; 
+        boogers -= cost; 
+        if(up.type === "click") { clickPower += up.bonusClick; up.qty++; } 
+        else if(up.type === "multiplier") { if(up.effect === "double") extraMultiplier = 2; if(up.effect === "golden") goldenActive = true; up.bought = true; } 
+        else if(up.type === "crit") { critChance += up.bonusCrit; if(critChance > 85) critChance = 85; up.qty++; } 
+        updateUI(); 
+        renderUpgrades(); 
+        saveGame(); 
+        return true; 
+    }
+    
+    function purchaseIngredient(ingId) { 
+        let ing = ingredients[ingId]; 
+        if(ing.owned) return; 
+        if(boogers >= ing.cost) { 
+            boogers -= ing.cost; 
+            ing.owned = true; 
+            showNotif(`🛒 Bought ${ing.name}!`); 
+            renderShop(); 
+            renderInventory(); 
+            updateUI(); 
+            saveGame(); 
+        } else createFloatingText(`Need ${ing.cost} boogers!`, window.innerWidth / 2, 300); 
+    }
+    
+    // ----- CRAFTING SYSTEM (WORKING) -----
+    function selectItem(type, id) {
+        selectedItem = { type, id };
+        // Visual feedback
+        let items = document.querySelectorAll('.inv-item');
+        items.forEach(el => el.classList.remove('selected-for-craft'));
+        if(event && event.target) {
+            event.target.classList.add('selected-for-craft');
+            setTimeout(() => event.target.classList.remove('selected-for-craft'), 300);
+        }
+        createFloatingText(`Selected: ${type === "ingredient" ? ingredients[id]?.name : specialBoogers[id]?.name}`, window.innerWidth/2, 250);
+    }
+    
+    function addToCraftingGrid(slotIndex) {
+        if(!selectedItem) { createFloatingText("Click an ingredient first!", window.innerWidth/2, 300); return; }
+        if(craftingGrid[slotIndex] !== null) { createFloatingText("Slot not empty! Click empty slot.", window.innerWidth/2, 300); return; }
         
-        if(!recId || recId === "") {
-            createFloatingText("👨‍🍳 Please select a recipe first!", window.innerWidth/2, 300);
-            return;
+        // Check if we have the resource
+        if(selectedItem.type === "ingredient") {
+            if(!ingredients[selectedItem.id]?.owned) { createFloatingText("You don't own this ingredient!", window.innerWidth/2, 300); return; }
+        } else if(selectedItem.type === "special") {
+            if(specialBoogers[selectedItem.id]?.count <= 0) { createFloatingText("You don't have this special booger!", window.innerWidth/2, 300); return; }
         }
         
-        let recipe = recipes[recId];
-        if(!recipe) {
-            createFloatingText("Recipe not found!", window.innerWidth/2, 300);
-            return;
+        craftingGrid[slotIndex] = { type: selectedItem.type, id: selectedItem.id };
+        renderCraftingGrid();
+        updateCraftingPreview();
+        saveGame();
+        selectedItem = null;
+    }
+    
+    function removeFromCraftingGrid(slotIndex) {
+        craftingGrid[slotIndex] = null;
+        renderCraftingGrid();
+        updateCraftingPreview();
+        saveGame();
+    }
+    
+    function updateCraftingPreview() {
+        let ingredientsInGrid = craftingGrid.filter(slot => slot && slot.type === "ingredient").map(slot => slot.id);
+        let specialInGrid = craftingGrid.filter(slot => slot && slot.type === "special").map(slot => slot.id);
+        let resultDiv = document.getElementById("craftingResult");
+        if(specialInGrid.length === 0) { resultDiv.innerHTML = "⚠️ Need a SPECIAL BOOGER on the table! ⚠️"; return; }
+        if(specialInGrid.length > 1) { resultDiv.innerHTML = "⚠️ Only ONE special booger allowed per craft! ⚠️"; return; }
+        let specialId = specialInGrid[0];
+        let matchingRecipe = null;
+        for(let [rid, rec] of Object.entries(recipes)) {
+            if(rec.requiresSpecial === specialId) {
+                let required = [...rec.requiresIngredients];
+                let hasAll = required.every(req => ingredientsInGrid.includes(req));
+                if(hasAll && ingredientsInGrid.length === required.length) {
+                    matchingRecipe = rec;
+                    break;
+                }
+            }
         }
-        
-        if(!recipe.discovered) {
-            createFloatingText(`🔒 Recipe "${recipe.name}" not discovered yet!`, window.innerWidth/2, 300);
-            return;
+        if(matchingRecipe) {
+            resultDiv.innerHTML = `✅ CAN CRAFT: ${matchingRecipe.emoji} ${matchingRecipe.name} → ${matchingRecipe.effect.message}`;
+        } else {
+            resultDiv.innerHTML = "❌ No valid recipe. Try: 1 special + specific ingredients (check recipe book)";
         }
+    }
+    
+    function craftItem() {
+        let ingredientsInGrid = craftingGrid.filter(slot => slot && slot.type === "ingredient").map(slot => slot.id);
+        let specialInGrid = craftingGrid.filter(slot => slot && slot.type === "special").map(slot => slot.id);
         
-        // Check special booger
-        let specialNeeded = specialBoogers[recipe.requiresSpecial];
-        if(!specialNeeded || specialNeeded.count <= 0) {
-            createFloatingText(`❌ Missing ${recipe.requiresSpecial} special booger! Need to find more by clicking.`, window.innerWidth/2, 300);
-            return;
-        }
+        if(specialInGrid.length === 0) { createFloatingText("Need a special booger on table!", window.innerWidth/2, 300); return; }
+        if(specialInGrid.length > 1) { createFloatingText("Only ONE special booger per craft!", window.innerWidth/2, 300); return; }
         
-        // Check all ingredients
-        let missingIngredients = [];
-        for(let ingId of recipe.requiresIngredients) {
-            let ing = ingredients[ingId];
-            if(!ing || !ing.owned) {
-                missingIngredients.push(ingId);
+        let specialId = specialInGrid[0];
+        let matchingRecipe = null;
+        for(let [rid, rec] of Object.entries(recipes)) {
+            if(rec.requiresSpecial === specialId) {
+                let required = [...rec.requiresIngredients];
+                let hasAll = required.every(req => ingredientsInGrid.includes(req));
+                if(hasAll && ingredientsInGrid.length === required.length) {
+                    matchingRecipe = rec;
+                    break;
+                }
             }
         }
         
-        if(missingIngredients.length > 0) {
-            let missingNames = missingIngredients.map(id => ingredients[id]?.name || id).join(", ");
-            createFloatingText(`❌ Missing ingredients: ${missingNames}. Buy them from the shop!`, window.innerWidth/2, 300);
-            return;
-        }
+        if(!matchingRecipe) { createFloatingText("Invalid recipe! Check the requirements.", window.innerWidth/2, 300); return; }
         
-        // CONSUME resources
-        specialNeeded.count--;
+        // Consume resources
+        if(specialBoogers[specialId].count <= 0) { createFloatingText("Missing special booger!", window.innerWidth/2, 300); return; }
+        specialBoogers[specialId].count--;
         
         // Apply effect
-        let effect = recipe.effect;
-        let rewardMsg = "";
+        let effect = matchingRecipe.effect;
+        if(effect.type === "instant_boogers") { boogers += effect.value; totalEaten += effect.value; createFloatingText(`🍲 +${effect.value} boogers!`, window.innerWidth/2, 200); }
+        else if(effect.type === "click_permanent") { clickPower += effect.value; createFloatingText(`⚡ Click power +${effect.value}!`, window.innerWidth/2, 200); }
+        else if(effect.type === "crit_bonus") { critChance += effect.value; if(critChance > 85) critChance = 85; createFloatingText(`💥 Crit +${effect.value}%!`, window.innerWidth/2, 200); }
+        else if(effect.type === "shiny_bonus") { shinyMultiplier += effect.value; createFloatingText(`✨ Shiny x${effect.value}!`, window.innerWidth/2, 200); }
         
-        if(effect.type === "instant_boogers") {
-            boogers += effect.value;
-            totalEaten += effect.value;
-            rewardMsg = effect.message;
-        } else if(effect.type === "click_permanent") {
-            clickPower += effect.value;
-            rewardMsg = effect.message;
-        } else if(effect.type === "crit_bonus") {
-            critChance += effect.value;
-            if(critChance > 85) critChance = 85;
-            rewardMsg = effect.message;
-        } else if(effect.type === "shiny_bonus") {
-            shinyMultiplier += effect.value;
-            rewardMsg = effect.message;
-        }
+        if(!matchingRecipe.discovered) { matchingRecipe.discovered = true; showNotif(`📖 Recipe discovered: ${matchingRecipe.name}!`); }
         
-        // Success message and animation
-        createFloatingText(`🍳 COOKED! ${recipe.name} 🍳`, window.innerWidth/2, 200);
-        setTimeout(() => {
-            createFloatingText(`✨ ${rewardMsg} ✨`, window.innerWidth/2, 150);
-        }, 400);
-        
-        // Update everything
-        updateUI();
+        // Clear crafting grid
+        craftingGrid = Array(9).fill(null);
+        renderCraftingGrid();
+        renderInventory();
         renderSpecialBoogers();
+        updateUI();
         renderUpgrades();
-        renderRecipeBook();
-        updateRecipeSelect();
-        updateRecipeRequirementsDisplay();
-        saveGameToCookie();
-        
-        // Show extra celebration
-        let face = document.getElementById("boogerFace");
-        if(face) {
-            face.style.transform = "scale(1.1)";
-            setTimeout(() => { if(face) face.style.transform = ""; }, 300);
-        }
+        updateCraftingPreview();
+        saveGame();
+        showNotif(`🎉 Crafted ${matchingRecipe.name}! 🎉`);
     }
     
-    // Display recipe requirements when selected
-    function updateRecipeRequirementsDisplay() {
-        let select = document.getElementById("recipeSelect");
-        let recId = select.value;
-        let container = document.getElementById("recipeRequirements");
-        
-        if(!recId || recId === "" || !recipes[recId]) {
-            container.innerHTML = "👨‍🍳 Select a recipe to see requirements";
-            return;
-        }
-        
-        let recipe = recipes[recId];
-        if(!recipe.discovered) {
-            container.innerHTML = "🔒 Recipe not discovered yet";
-            return;
-        }
-        
-        let special = specialBoogers[recipe.requiresSpecial];
-        let specialStatus = special && special.count > 0 ? `✅ ${special.name} x${special.count}` : `❌ ${special?.name || "Unknown"} (0 owned)`;
-        
-        let ingredientsList = recipe.requiresIngredients.map(ingId => {
-            let ing = ingredients[ingId];
-            let owned = ing && ing.owned;
-            return owned ? `✅ ${ing.name}` : `❌ ${ing?.name || ingId}`;
-        }).join(", ");
-        
-        container.innerHTML = `🔪 Requires: ${specialStatus} | 🧂 ${ingredientsList}<br>🎁 Reward: ${recipe.effect.message}`;
+    function clearCraftingGrid() { craftingGrid = Array(9).fill(null); renderCraftingGrid(); updateCraftingPreview(); saveGame(); }
+    
+    // ---------- RENDER FUNCTIONS ----------
+    function updateUI() { 
+        document.getElementById("boogerCount").innerText = Math.floor(boogers); 
+        document.getElementById("clickPower").innerText = getClickReward(); 
+        document.getElementById("critChance").innerText = `${Math.min(85, critChance)}%`; 
     }
     
-    // RENDER FUNCTIONS
-    function updateUI() {
-        document.getElementById("boogerCount").innerText = Math.floor(boogers);
-        let effectivePower = getClickReward();
-        document.getElementById("clickPower").innerText = effectivePower;
-        document.getElementById("totalEaten").innerText = Math.floor(totalEaten);
-        document.getElementById("critChance").innerText = `${Math.min(85, critChance)}%`;
+    function renderUpgrades() { 
+        let container = document.getElementById("upgradesList"); 
+        if(!container) return;
+        container.innerHTML = ""; 
+        for(let up of upgrades) { 
+            let cost = up.cost, disabled = false; 
+            if(up.type === "multiplier" && up.bought) disabled = true; 
+            if(!disabled && up.type !== "multiplier") { let q = up.qty || 0; cost = Math.floor(up.cost * Math.pow(up.costScale || 1.3, q)); } 
+            let affordable = boogers >= cost && !disabled; 
+            let div = document.createElement('div'); 
+            div.className = `upgrade-card ${!affordable ? 'disabled' : ''}`; 
+            let desc = ""; 
+            if(up.type === "click") desc = `+${up.bonusClick}`; 
+            else if(up.type === "crit") desc = `+${up.bonusCrit}%`; 
+            else if(up.type === "multiplier") desc = up.effect === "double" ? "x2" : "5x"; 
+            div.innerHTML = `<span>${up.name} ${up.qty ? `x${up.qty}` : ''} ${desc}</span><span class="cost-badge">💰 ${Math.floor(cost)}</span>`; 
+            if(affordable) div.addEventListener('click', () => purchaseUpgrade(up)); 
+            container.appendChild(div); 
+        } 
     }
     
-    function renderUpgrades() {
-        let container = document.getElementById("upgradesList");
+    function renderSpecialBoogers() { 
+        let container = document.getElementById("specialBoogersList"); 
+        if(!container) return;
+        container.innerHTML = ""; 
+        for(let id in specialBoogers) { 
+            let d = specialBoogers[id]; 
+            let div = document.createElement('div'); 
+            div.className = 'special-booger-badge'; 
+            div.innerHTML = `<span>${d.emoji} ${d.name}</span><span>x${d.count}</span>`; 
+            container.appendChild(div); 
+        } 
+    }
+    
+    function renderShop() { 
+        let container = document.getElementById("shopIngredientsList"); 
+        if(!container) return;
+        container.innerHTML = ""; 
+        for(let [id, ing] of Object.entries(ingredients)) { 
+            let div = document.createElement('div'); 
+            div.className = `upgrade-card ${ing.owned ? 'disabled' : ''}`; 
+            div.style.margin = "5px 0";
+            div.innerHTML = `<span>${ing.emoji} ${ing.name} ${ing.owned ? '✅ OWNED' : ''}</span><span class="cost-badge">💰 ${ing.cost}</span>`; 
+            if(!ing.owned) div.addEventListener('click', () => purchaseIngredient(id)); 
+            container.appendChild(div); 
+        } 
+    }
+    
+    function renderInventory() {
+        let container = document.getElementById("inventoryIngredients");
         if(!container) return;
         container.innerHTML = "";
-        for(let up of upgrades) {
-            let cost = up.cost;
-            let disabled = false;
-            if(up.type==="multiplier" && up.bought) disabled=true;
-            if(!disabled && up.type!=="multiplier") { let q=up.qty||0; let scale=up.costScale||1.3; cost = Math.floor(up.cost * Math.pow(scale,q)); }
-            let affordable = boogers >= cost && !disabled;
-            let div = document.createElement('div');
-            div.className = `upgrade-card ${!affordable ? 'disabled' : ''}`;
-            let desc = "";
-            if(up.type==="click") desc=`+${up.bonusClick} power`;
-            else if(up.type==="crit") desc=`+${up.bonusCrit}% crit`;
-            else if(up.type==="shiny") desc=`+${up.bonusShiny}x shiny`;
-            else if(up.type==="multiplier") desc=up.effect==="double"?"x2 click":"5x click";
-            div.innerHTML = `<span>${up.name} ${up.qty?`x${up.qty}`:''} <span style="font-size:0.7rem;">${desc}</span></span><span class="cost-badge">💰 ${Math.floor(cost)}</span>`;
-            if(affordable) div.addEventListener('click',()=>purchaseUpgrade(up));
-            container.appendChild(div);
-        }
-    }
-    
-    function renderSpecialBoogers() {
-        let container = document.getElementById("specialBoogersList");
-        if(!container) return;
-        container.innerHTML = "";
-        for(let [id, data] of Object.entries(specialBoogers)) {
-            let div = document.createElement('div');
-            div.className = 'special-booger-badge';
-            div.innerHTML = `<span>${data.emoji} ${data.name}</span><span style="background:#3e2a1a; padding:2px 12px; border-radius:30px;">x${data.count}</span>`;
-            container.appendChild(div);
-        }
-        if(Object.values(specialBoogers).every(b=>b.count===0)) container.innerHTML = "<i>✨ Click the booger to find rare ones...</i>";
-    }
-    
-    function renderShopIngredients() {
-        let container = document.getElementById("shopIngredientsList");
-        if(!container) return;
-        container.innerHTML = "";
+        // Show owned ingredients
         for(let [id, ing] of Object.entries(ingredients)) {
-            let div = document.createElement('div');
-            div.className = `ingredient-card ${ing.owned ? 'disabled' : ''}`;
-            div.innerHTML = `<span>${ing.emoji} ${ing.name} ${ing.owned ? '✅ OWNED' : ''}</span><span class="cost-badge">💰 ${ing.cost}</span>`;
-            if(!ing.owned) div.addEventListener('click',()=>purchaseIngredient(id));
-            container.appendChild(div);
-        }
-    }
-    
-    function renderRecipeBook() {
-        let container = document.getElementById("recipeBookList");
-        if(!container) return;
-        container.innerHTML = "";
-        let anyDiscovered = false;
-        for(let [id, rec] of Object.entries(recipes)) {
-            if(rec.discovered) {
-                anyDiscovered = true;
-                let div = document.createElement('div');
-                div.className = 'ingredient-card';
-                div.style.background = "#8b6946";
-                div.style.cursor = "pointer";
-                div.innerHTML = `<span>${rec.emoji} ${rec.name}</span><span style="font-size:0.7rem;">✨ ${rec.effect.message.substring(0,35)}</span>`;
-                div.addEventListener('click', () => {
-                    let select = document.getElementById("recipeSelect");
-                    select.value = id;
-                    updateRecipeRequirementsDisplay();
+            if(ing.owned) {
+                let div = document.createElement("div");
+                div.className = "inv-item";
+                div.innerHTML = `${ing.emoji} ${ing.name}`;
+                div.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    selectItem("ingredient", id);
                 });
                 container.appendChild(div);
             }
         }
-        if(!anyDiscovered) container.innerHTML = "<i>🔒 Unlock ingredients & special boogers to discover recipes!</i>";
-    }
-    
-    function updateRecipeSelect() {
-        let select = document.getElementById("recipeSelect");
-        if(!select) return;
-        let currentValue = select.value;
-        select.innerHTML = '<option value="">-- Select a recipe --</option>';
-        for(let [id, rec] of Object.entries(recipes)) {
-            if(rec.discovered) {
-                let option = document.createElement('option');
-                option.value = id;
-                option.innerText = `${rec.emoji} ${rec.name}`;
-                select.appendChild(option);
+        // Show special boogers
+        for(let [id, sp] of Object.entries(specialBoogers)) {
+            if(sp.count > 0) {
+                let div = document.createElement("div");
+                div.className = "inv-item";
+                div.innerHTML = `${sp.emoji} ${sp.name} (x${sp.count})`;
+                div.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    selectItem("special", id);
+                });
+                container.appendChild(div);
             }
         }
-        if(currentValue && recipes[currentValue]?.discovered) {
-            select.value = currentValue;
+        if(container.children.length === 0) container.innerHTML = "<i>No ingredients yet! Buy from shop →</i>";
+    }
+    
+    function renderCraftingGrid() {
+        let container = document.getElementById("craftingGrid");
+        if(!container) return;
+        container.innerHTML = "";
+        for(let i = 0; i < 9; i++) {
+            let slot = craftingGrid[i];
+            let div = document.createElement("div");
+            div.className = `craft-slot ${slot ? "filled" : "empty"}`;
+            if(slot) {
+                let itemData = slot.type === "ingredient" ? ingredients[slot.id] : specialBoogers[slot.id];
+                let emoji = itemData?.emoji || "❓";
+                let name = slot.id.substring(0, 6);
+                div.innerHTML = `<div class="slot-emoji">${emoji}</div><div class="slot-name">${name}</div>`;
+                div.addEventListener("click", () => removeFromCraftingGrid(i));
+            } else {
+                div.innerHTML = `<div class="slot-emoji">⬜</div><div class="slot-name">empty</div>`;
+                div.addEventListener("click", () => addToCraftingGrid(i));
+            }
+            container.appendChild(div);
         }
-        updateRecipeRequirementsDisplay();
     }
     
-    function createFloatingText(text, x, y) {
-        let div = document.createElement('div');
-        div.className = 'float-particle';
-        div.innerText = text;
-        div.style.left = `${x-25}px`;
-        div.style.top = `${y-25}px`;
-        let dx = (Math.random() - 0.5)*70;
-        let dy = -50 - Math.random()*50;
-        div.style.setProperty('--dx', `${dx}px`);
-        div.style.setProperty('--dy', `${dy}px`);
-        document.body.appendChild(div);
-        setTimeout(()=>div.remove(), 700);
+    function createFloatingText(text, x, y) { 
+        let div = document.createElement('div'); 
+        div.className = 'float-particle'; 
+        div.innerText = text; 
+        div.style.left = `${x - 25}px`; 
+        div.style.top = `${y - 25}px`; 
+        let dx = (Math.random() - 0.5) * 70; 
+        let dy = -50 - Math.random() * 50; 
+        div.style.setProperty('--dx', `${dx}px`); 
+        div.style.setProperty('--dy', `${dy}px`); 
+        document.body.appendChild(div); 
+        setTimeout(() => div.remove(), 700); 
     }
     
-    function resetGame() {
-        boogers=0; clickPower=1; totalEaten=0; extraMultiplier=1; goldenActive=false; critChance=0; shinyMultiplier=1;
-        for(let id in specialBoogers) { specialBoogers[id].count=0; specialBoogers[id].discovered=false; }
-        for(let id in ingredients) { ingredients[id].owned=false; ingredients[id].discovered=false; }
-        for(let id in recipes) { recipes[id].discovered=false; }
-        for(let up of upgrades) { if(up.type==="multiplier") up.bought=false; else up.qty=0; }
-        updateUI();
-        renderUpgrades();
-        renderSpecialBoogers();
-        renderShopIngredients();
-        renderRecipeBook();
-        updateRecipeSelect();
-        saveGameToCookie();
-        showDiscoveryNotification("🧽 World wiped clean! Start fresh.");
+    function showNotif(msg) { 
+        let div = document.createElement('div'); 
+        div.className = 'discovery-notification'; 
+        div.innerText = msg; 
+        document.body.appendChild(div); 
+        setTimeout(() => div.remove(), 2500); 
     }
     
-    function saveGameToCookie() {
-        let save = {
-            boogers, clickPower, totalEaten, extraMultiplier, goldenActive, critChance, shinyMultiplier,
-            specialBoogers, ingredients, recipes, upgrades: upgrades.map(u=>({id:u.id, qty:u.qty, bought:u.bought}))
-        };
-        setCookie("boogerChefSave", save, 365);
+    function resetGame() { 
+        boogers = 150; 
+        clickPower = 1; 
+        totalEaten = 0; 
+        extraMultiplier = 1; 
+        goldenActive = false; 
+        critChance = 0; 
+        shinyMultiplier = 1; 
+        for(let id in specialBoogers) { 
+            specialBoogers[id].count = id === "spicy" ? 1 : 0; 
+            specialBoogers[id].discovered = id === "spicy"; 
+        } 
+        for(let id in ingredients) ingredients[id].owned = false; 
+        for(let id in recipes) recipes[id].discovered = false; 
+        for(let up of upgrades) { if(up.type === "multiplier") up.bought = false; else up.qty = 0; } 
+        craftingGrid = Array(9).fill(null); 
+        selectedItem = null;
+        updateUI(); 
+        renderUpgrades(); 
+        renderSpecialBoogers(); 
+        renderShop(); 
+        renderInventory(); 
+        renderCraftingGrid(); 
+        updateCraftingPreview(); 
+        saveGame(); 
+        showNotif("Game reset!"); 
     }
     
-    function loadGame() {
-        let data = getCookie("boogerChefSave");
-        if(!data) return;
-        boogers=data.boogers||0; clickPower=data.clickPower||1; totalEaten=data.totalEaten||0;
-        extraMultiplier=data.extraMultiplier||1; goldenActive=data.goldenActive||false; critChance=data.critChance||0; shinyMultiplier=data.shinyMultiplier||1;
-        if(data.specialBoogers) for(let k in data.specialBoogers) if(specialBoogers[k]) Object.assign(specialBoogers[k], data.specialBoogers[k]);
-        if(data.ingredients) for(let k in data.ingredients) if(ingredients[k]) Object.assign(ingredients[k], data.ingredients[k]);
-        if(data.recipes) for(let k in data.recipes) if(recipes[k]) recipes[k].discovered = data.recipes[k].discovered;
-        if(data.upgrades) for(let s of data.upgrades) { let up=upgrades.find(u=>u.id===s.id); if(up) { up.qty=s.qty||0; up.bought=s.bought||false; } }
-        updateUI();
-        renderUpgrades();
-        renderSpecialBoogers();
-        renderShopIngredients();
-        renderRecipeBook();
-        updateRecipeSelect();
-        updateRecipeDiscoveries();
-    }
-    
-    // Event binding
+    // Event listeners
     document.getElementById("boogerClicker").addEventListener("click", onBoogerClick);
     document.getElementById("resetGame").addEventListener("click", resetGame);
-    document.getElementById("cookButton").addEventListener("click", cookSelectedRecipe);
-    document.getElementById("recipeSelect").addEventListener("change", updateRecipeRequirementsDisplay);
+    document.getElementById("clearCraftBtn").addEventListener("click", clearCraftingGrid);
+    document.getElementById("craftActionBtn").addEventListener("click", craftItem);
     
     loadGame();
-    setInterval(()=>saveGameToCookie(), 15000);
+    setInterval(() => saveGame(), 15000);
 </script>
 </body>
 </html>
